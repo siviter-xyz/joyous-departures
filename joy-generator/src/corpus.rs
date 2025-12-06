@@ -1,5 +1,5 @@
 use std::sync::Arc;
-use std::sync::Once;
+use std::sync::OnceLock;
 
 use crate::emoji::has_emojis;
 use crate::error::GoodbyeError;
@@ -31,32 +31,27 @@ static CORPUS_TEXT: &str = include_str!("../../corpus/en-GB.txt");
 /// Load and cache the message corpus
 /// This is called once on first use, then cached in Arc for thread-safety
 pub fn load_corpus() -> Result<Arc<MessageCorpus>, GoodbyeError> {
-    static INIT: Once = Once::new();
-    static mut CORPUS: Option<Arc<MessageCorpus>> = None;
+    static CORPUS: OnceLock<Arc<MessageCorpus>> = OnceLock::new();
 
-    unsafe {
-        INIT.call_once(|| {
-            let corpus = if CORPUS_TEXT.is_empty() {
-                // Fallback if corpus is empty
+    Ok(CORPUS.get_or_init(|| {
+        let corpus = if CORPUS_TEXT.is_empty() {
+            // Fallback if corpus is empty
+            create_fallback_corpus()
+        } else {
+            // Parse corpus (one message per line)
+            let messages: Vec<MessageTemplate> = CORPUS_TEXT
+                .lines()
+                .filter(|line| !line.trim().is_empty() && !line.trim().starts_with('#'))
+                .map(|line| MessageTemplate {
+                    template: line.trim().to_string(),
+                    language_code: "en-GB".to_string(),
+                    has_emojis: has_emojis(line),
+                })
+                .collect();
+
+            if messages.is_empty() {
                 create_fallback_corpus()
             } else {
-                // Parse corpus (one message per line)
-                let messages: Vec<MessageTemplate> = CORPUS_TEXT
-                    .lines()
-                    .filter(|line| !line.trim().is_empty() && !line.trim().starts_with('#'))
-                    .map(|line| MessageTemplate {
-                        template: line.trim().to_string(),
-                        language_code: "en-GB".to_string(),
-                        has_emojis: has_emojis(line),
-                    })
-                    .collect();
-
-                if messages.is_empty() {
-                    let fallback = create_fallback_corpus();
-                    CORPUS = Some(Arc::new(fallback));
-                    return;
-                }
-
                 // Build language index
                 let mut language_index: std::collections::HashMap<String, Vec<usize>> =
                     std::collections::HashMap::new();
@@ -71,17 +66,12 @@ pub fn load_corpus() -> Result<Arc<MessageCorpus>, GoodbyeError> {
                     messages,
                     language_index,
                 }
-            };
+            }
+        };
 
-            let corpus_arc = Arc::new(corpus);
-            CORPUS = Some(corpus_arc);
-        });
-
-        // SAFETY: INIT.call_once ensures CORPUS is initialized
-        unsafe {
-            Ok(CORPUS.as_ref().unwrap_unchecked().clone())
-        }
-    }
+        Arc::new(corpus)
+    })
+    .clone())
 }
 
 /// Create a fallback corpus with a single default message
