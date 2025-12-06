@@ -1,7 +1,6 @@
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 
-
 use joy_generator::{generate_goodbye as rust_generate_goodbye, CoreGoodbyeOptions, GoodbyeError};
 
 /// Generate a warm, heartfelt goodbye message

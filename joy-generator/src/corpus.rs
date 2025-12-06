@@ -52,7 +52,8 @@ pub fn load_corpus() -> Result<Arc<MessageCorpus>, GoodbyeError> {
                     .collect();
 
                 if messages.is_empty() {
-                    CORPUS = Some(Arc::new(create_fallback_corpus()));
+                    let fallback = create_fallback_corpus();
+                    CORPUS = Some(Arc::new(fallback));
                     return;
                 }
 
@@ -72,10 +73,14 @@ pub fn load_corpus() -> Result<Arc<MessageCorpus>, GoodbyeError> {
                 }
             };
 
-            CORPUS = Some(Arc::new(corpus));
+            let corpus_arc = Arc::new(corpus);
+            CORPUS = Some(corpus_arc);
         });
 
-        Ok(CORPUS.as_ref().unwrap().clone())
+        // SAFETY: INIT.call_once ensures CORPUS is initialized
+        unsafe {
+            Ok(CORPUS.as_ref().unwrap_unchecked().clone())
+        }
     }
 }
 
