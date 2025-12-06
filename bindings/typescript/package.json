@@ -1,0 +1,53 @@
+{
+  "name": "@siviter-xyz/joy-goodbye",
+  "version": "0.1.0",
+  "description": "Generate warm, heartfelt goodbye messages for email templates",
+  "type": "module",
+  "main": "./pkg/joy_goodbye_wasm.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./pkg/joy_goodbye_wasm.js",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "files": [
+    "pkg",
+    "src/index.d.ts",
+    "README.md"
+  ],
+  "keywords": [
+    "goodbye",
+    "sign-off",
+    "messages",
+    "email",
+    "templates"
+  ],
+  "author": "siviter.xyz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siviter-xyz/joy-goodbye"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^2.0.0",
+    "wasm-pack": "^0.13.0"
+  },
+  "scripts": {
+    "build": "wasm-pack build --target web --out-dir pkg",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src tests",
+    "format": "prettier --write src tests"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

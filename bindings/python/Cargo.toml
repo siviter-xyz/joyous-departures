@@ -1,0 +1,17 @@
+[package]
+name = "joy-goodbye-py"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Python bindings for joy-goodbye message generator"
+
+[lib]
+name = "joy_goodbye"
+crate-type = ["cdylib"]
+
+[dependencies]
+joy-generator = { path = "../../joy-generator" }
+pyo3.workspace = true
+

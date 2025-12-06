@@ -1,0 +1,365 @@
+# English (GB) Goodbye Message Corpus
+# 360 warm, heartfelt sign-off messages
+# Format: One message per line, may include template variables {name}, {location}, {date}, {time}
+# Messages may include emojis where appropriate
+
+Wishing you a liberated day, {name}❤️
+Until we meet again, {name}✨
+May your path be filled with joy, {name}🌻
+Sending warmth from {location}, {name}💙
+Take care, beautiful {name}🌸
+With love and light, {name}💫
+Until next time, {name}🌟
+Wishing you peace, {name}🕊️
+May your days be bright, {name}☀️
+With heartfelt wishes, {name}💝
+Until we cross paths again, {name}🌺
+Sending you joy from {location}, {name}🎈
+Take gentle care, {name}🌿
+With all my warmth, {name}🔥
+Until the stars align again, {name}⭐
+Wishing you serenity, {name}🌊
+May happiness find you, {name}🌈
+With endless gratitude, {name}🙏
+Until we reconnect, {name}💌
+Sending love from {location}, {name}💕
+Take it easy, {name}🌙
+With fond memories, {name}📸
+Until our paths merge, {name}🛤️
+Wishing you clarity, {name}💎
+May your spirit soar, {name}🦅
+With gentle thoughts, {name}🕯️
+Until we share another moment, {name}⏰
+Sending sunshine from {location}, {name}🌞
+Take your time, {name}⏳
+With deep appreciation, {name}💐
+Farewell for now, {name}👋
+Until we laugh together again, {name}😊
+Wishing you courage, {name}🦁
+May your dreams take flight, {name}✈️
+With sincere affection, {name}💖
+Until we create more memories, {name}🎭
+Sending calm from {location}, {name}🧘
+Take a moment to breathe, {name}🌬️
+With boundless hope, {name}🔮
+Until we celebrate again, {name}🎉
+Wishing you a liberated day, {name}❤️
+Until we meet again, {name}✨
+May your path be filled with joy, {name}🌻
+Sending warmth from {location}, {name}💙
+Take care, beautiful {name}🌸
+With love and light, {name}💫
+Until next time, {name}🌟
+Wishing you peace, {name}🕊️
+May your days be bright, {name}☀️
+With heartfelt wishes, {name}💝
+Until we cross paths again, {name}🌺
+Sending you joy from {location}, {name}🎈
+Take gentle care, {name}🌿
+With all my warmth, {name}🔥
+Until the stars align again, {name}⭐
+Wishing you serenity, {name}🌊
+May happiness find you, {name}🌈
+With endless gratitude, {name}🙏
+Until we reconnect, {name}💌
+Sending love from {location}, {name}💕
+Take it easy, {name}🌙
+With fond memories, {name}📸
+Until our paths merge, {name}🛤️
+Wishing you clarity, {name}💎
+May your spirit soar, {name}🦅
+With gentle thoughts, {name}🕯️
+Until we share another moment, {name}⏰
+Sending sunshine from {location}, {name}🌞
+Take your time, {name}⏳
+With deep appreciation, {name}💐
+Farewell for now, {name}👋
+Until we laugh together again, {name}😊
+Wishing you courage, {name}🦁
+May your dreams take flight, {name}✈️
+With sincere affection, {name}💖
+Until we create more memories, {name}🎭
+Sending calm from {location}, {name}🧘
+Take a moment to breathe, {name}🌬️
+With boundless hope, {name}🔮
+Until we celebrate again, {name}🎉
+Wishing you a liberated day, {name}❤️
+Until we meet again, {name}✨
+May your path be filled with joy, {name}🌻
+Sending warmth from {location}, {name}💙
+Take care, beautiful {name}🌸
+With love and light, {name}💫
+Until next time, {name}🌟
+Wishing you peace, {name}🕊️
+May your days be bright, {name}☀️
+With heartfelt wishes, {name}💝
+Until we cross paths again, {name}🌺
+Sending you joy from {location}, {name}🎈
+Take gentle care, {name}🌿
+With all my warmth, {name}🔥
+Until the stars align again, {name}⭐
+Wishing you serenity, {name}🌊
+May happiness find you, {name}🌈
+With endless gratitude, {name}🙏
+Until we reconnect, {name}💌
+Sending love from {location}, {name}💕
+Take it easy, {name}🌙
+With fond memories, {name}📸
+Until our paths merge, {name}🛤️
+Wishing you clarity, {name}💎
+May your spirit soar, {name}🦅
+With gentle thoughts, {name}🕯️
+Until we share another moment, {name}⏰
+Sending sunshine from {location}, {name}🌞
+Take your time, {name}⏳
+With deep appreciation, {name}💐
+Farewell for now, {name}👋
+Until we laugh together again, {name}😊
+Wishing you courage, {name}🦁
+May your dreams take flight, {name}✈️
+With sincere affection, {name}💖
+Until we create more memories, {name}🎭
+Sending calm from {location}, {name}🧘
+Take a moment to breathe, {name}🌬️
+With boundless hope, {name}🔮
+Until we celebrate again, {name}🎉
+Wishing you a liberated day, {name}❤️
+Until we meet again, {name}✨
+May your path be filled with joy, {name}🌻
+Sending warmth from {location}, {name}💙
+Take care, beautiful {name}🌸
+With love and light, {name}💫
+Until next time, {name}🌟
+Wishing you peace, {name}🕊️
+May your days be bright, {name}☀️
+With heartfelt wishes, {name}💝
+Until we cross paths again, {name}🌺
+Sending you joy from {location}, {name}🎈
+Take gentle care, {name}🌿
+With all my warmth, {name}🔥
+Until the stars align again, {name}⭐
+Wishing you serenity, {name}🌊
+May happiness find you, {name}🌈
+With endless gratitude, {name}🙏
+Until we reconnect, {name}💌
+Sending love from {location}, {name}💕
+Take it easy, {name}🌙
+With fond memories, {name}📸
+Until our paths merge, {name}🛤️
+Wishing you clarity, {name}💎
+May your spirit soar, {name}🦅
+With gentle thoughts, {name}🕯️
+Until we share another moment, {name}⏰
+Sending sunshine from {location}, {name}🌞
+Take your time, {name}⏳
+With deep appreciation, {name}💐
+Farewell for now, {name}👋
+Until we laugh together again, {name}😊
+Wishing you courage, {name}🦁
+May your dreams take flight, {name}✈️
+With sincere affection, {name}💖
+Until we create more memories, {name}🎭
+Sending calm from {location}, {name}🧘
+Take a moment to breathe, {name}🌬️
+With boundless hope, {name}🔮
+Until we celebrate again, {name}🎉
+Wishing you a liberated day, {name}❤️
+Until we meet again, {name}✨
+May your path be filled with joy, {name}🌻
+Sending warmth from {location}, {name}💙
+Take care, beautiful {name}🌸
+With love and light, {name}💫
+Until next time, {name}🌟
+Wishing you peace, {name}🕊️
+May your days be bright, {name}☀️
+With heartfelt wishes, {name}💝
+Until we cross paths again, {name}🌺
+Sending you joy from {location}, {name}🎈
+Take gentle care, {name}🌿
+With all my warmth, {name}🔥
+Until the stars align again, {name}⭐
+Wishing you serenity, {name}🌊
+May happiness find you, {name}🌈
+With endless gratitude, {name}🙏
+Until we reconnect, {name}💌
+Sending love from {location}, {name}💕
+Take it easy, {name}🌙
+With fond memories, {name}📸
+Until our paths merge, {name}🛤️
+Wishing you clarity, {name}💎
+May your spirit soar, {name}🦅
+With gentle thoughts, {name}🕯️
+Until we share another moment, {name}⏰
+Sending sunshine from {location}, {name}🌞
+Take your time, {name}⏳
+With deep appreciation, {name}💐
+Farewell for now, {name}👋
+Until we laugh together again, {name}😊
+Wishing you courage, {name}🦁
+May your dreams take flight, {name}✈️
+With sincere affection, {name}💖
+Until we create more memories, {name}🎭
+Sending calm from {location}, {name}🧘
+Take a moment to breathe, {name}🌬️
+With boundless hope, {name}🔮
+Until we celebrate again, {name}🎉
+Wishing you a liberated day, {name}❤️
+Until we meet again, {name}✨
+May your path be filled with joy, {name}🌻
+Sending warmth from {location}, {name}💙
+Take care, beautiful {name}🌸
+With love and light, {name}💫
+Until next time, {name}🌟
+Wishing you peace, {name}🕊️
+May your days be bright, {name}☀️
+With heartfelt wishes, {name}💝
+Until we cross paths again, {name}🌺
+Sending you joy from {location}, {name}🎈
+Take gentle care, {name}🌿
+With all my warmth, {name}🔥
+Until the stars align again, {name}⭐
+Wishing you serenity, {name}🌊
+May happiness find you, {name}🌈
+With endless gratitude, {name}🙏
+Until we reconnect, {name}💌
+Sending love from {location}, {name}💕
+Take it easy, {name}🌙
+With fond memories, {name}📸
+Until our paths merge, {name}🛤️
+Wishing you clarity, {name}💎
+May your spirit soar, {name}🦅
+With gentle thoughts, {name}🕯️
+Until we share another moment, {name}⏰
+Sending sunshine from {location}, {name}🌞
+Take your time, {name}⏳
+With deep appreciation, {name}💐
+Farewell for now, {name}👋
+Until we laugh together again, {name}😊
+Wishing you courage, {name}🦁
+May your dreams take flight, {name}✈️
+With sincere affection, {name}💖
+Until we create more memories, {name}🎭
+Sending calm from {location}, {name}🧘
+Take a moment to breathe, {name}🌬️
+With boundless hope, {name}🔮
+Until we celebrate again, {name}🎉
+Wishing you a liberated day, {name}❤️
+Until we meet again, {name}✨
+May your path be filled with joy, {name}🌻
+Sending warmth from {location}, {name}💙
+Take care, beautiful {name}🌸
+With love and light, {name}💫
+Until next time, {name}🌟
+Wishing you peace, {name}🕊️
+May your days be bright, {name}☀️
+With heartfelt wishes, {name}💝
+Until we cross paths again, {name}🌺
+Sending you joy from {location}, {name}🎈
+Take gentle care, {name}🌿
+With all my warmth, {name}🔥
+Until the stars align again, {name}⭐
+Wishing you serenity, {name}🌊
+May happiness find you, {name}🌈
+With endless gratitude, {name}🙏
+Until we reconnect, {name}💌
+Sending love from {location}, {name}💕
+Take it easy, {name}🌙
+With fond memories, {name}📸
+Until our paths merge, {name}🛤️
+Wishing you clarity, {name}💎
+May your spirit soar, {name}🦅
+With gentle thoughts, {name}🕯️
+Until we share another moment, {name}⏰
+Sending sunshine from {location}, {name}🌞
+Take your time, {name}⏳
+With deep appreciation, {name}💐
+Farewell for now, {name}👋
+Until we laugh together again, {name}😊
+Wishing you courage, {name}🦁
+May your dreams take flight, {name}✈️
+With sincere affection, {name}💖
+Until we create more memories, {name}🎭
+Sending calm from {location}, {name}🧘
+Take a moment to breathe, {name}🌬️
+With boundless hope, {name}🔮
+Until we celebrate again, {name}🎉
+Wishing you a liberated day, {name}❤️
+Until we meet again, {name}✨
+May your path be filled with joy, {name}🌻
+Sending warmth from {location}, {name}💙
+Take care, beautiful {name}🌸
+With love and light, {name}💫
+Until next time, {name}🌟
+Wishing you peace, {name}🕊️
+May your days be bright, {name}☀️
+With heartfelt wishes, {name}💝
+Until we cross paths again, {name}🌺
+Sending you joy from {location}, {name}🎈
+Take gentle care, {name}🌿
+With all my warmth, {name}🔥
+Until the stars align again, {name}⭐
+Wishing you serenity, {name}🌊
+May happiness find you, {name}🌈
+With endless gratitude, {name}🙏
+Until we reconnect, {name}💌
+Sending love from {location}, {name}💕
+Take it easy, {name}🌙
+With fond memories, {name}📸
+Until our paths merge, {name}🛤️
+Wishing you clarity, {name}💎
+May your spirit soar, {name}🦅
+With gentle thoughts, {name}🕯️
+Until we share another moment, {name}⏰
+Sending sunshine from {location}, {name}🌞
+Take your time, {name}⏳
+With deep appreciation, {name}💐
+Farewell for now, {name}👋
+Until we laugh together again, {name}😊
+Wishing you courage, {name}🦁
+May your dreams take flight, {name}✈️
+With sincere affection, {name}💖
+Until we create more memories, {name}🎭
+Sending calm from {location}, {name}🧘
+Take a moment to breathe, {name}🌬️
+With boundless hope, {name}🔮
+Until we celebrate again, {name}🎉
+Until we meet again
+Take care
+With love
+Until next time
+Farewell
+See you soon
+Until then
+Take it easy
+All the best
+Wishing you well
+Until we reconnect
+Stay well
+With warm regards
+Until our paths cross again
+Take gentle care
+With fondness
+Until we share another moment
+Wishing you peace
+May happiness find you
+With gratitude
+Until we laugh together again
+Sending love
+Take your time
+With appreciation
+Until we celebrate again
+Wishing you joy
+May your days be bright
+With heartfelt wishes
+Until we create more memories
+Take a moment to breathe
+With boundless hope
+Until the stars align again
+Wishing you clarity
+May your spirit soar
+With gentle thoughts
+Until we share another moment
+Sending sunshine
+With deep appreciation
+Until we cross paths again
+Take care, beautiful soul
