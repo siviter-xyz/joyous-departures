@@ -1,9 +1,6 @@
 use std::sync::Arc;
 use std::sync::Once;
 
-use lz4::Decoder;
-use std::io::Read;
-
 use crate::emoji::has_emojis;
 use crate::error::GoodbyeError;
 
@@ -27,11 +24,9 @@ pub struct MessageCorpus {
     pub language_index: std::collections::HashMap<String, Vec<usize>>,
 }
 
-// Embedded compressed corpus data (set at build time)
-// This will be populated by a build script that compresses corpus/en-GB.txt
-// For now, we use an empty slice - corpus will be populated in Phase 5
-// When corpus is ready, uncomment and use: include_bytes!("../../corpus/en-GB.txt.lz4");
-static COMPRESSED_CORPUS: &[u8] = &[];
+// Embedded corpus data (loaded at build time)
+// The corpus is embedded directly as text - it's small enough that compression isn't necessary
+static CORPUS_TEXT: &str = include_str!("../../corpus/en-GB.txt");
 
 /// Load and cache the message corpus
 /// This is called once on first use, then cached in Arc for thread-safety
@@ -41,36 +36,12 @@ pub fn load_corpus() -> Result<Arc<MessageCorpus>, GoodbyeError> {
 
     unsafe {
         INIT.call_once(|| {
-            let corpus = if COMPRESSED_CORPUS.is_empty() {
-                // For now, if corpus is empty, return fallback
-                // In Phase 5, we'll populate the corpus file
+            let corpus = if CORPUS_TEXT.is_empty() {
+                // Fallback if corpus is empty
                 create_fallback_corpus()
             } else {
-                // Decompress corpus
-                let mut decoder = match Decoder::new(COMPRESSED_CORPUS) {
-                    Ok(d) => d,
-                    Err(_) => {
-                        CORPUS = Some(Arc::new(create_fallback_corpus()));
-                        return;
-                    }
-                };
-
-                let mut decompressed = Vec::new();
-                if decoder.read_to_end(&mut decompressed).is_err() {
-                    CORPUS = Some(Arc::new(create_fallback_corpus()));
-                    return;
-                }
-
                 // Parse corpus (one message per line)
-                let text = match String::from_utf8(decompressed) {
-                    Ok(t) => t,
-                    Err(_) => {
-                        CORPUS = Some(Arc::new(create_fallback_corpus()));
-                        return;
-                    }
-                };
-
-                let messages: Vec<MessageTemplate> = text
+                let messages: Vec<MessageTemplate> = CORPUS_TEXT
                     .lines()
                     .filter(|line| !line.trim().is_empty() && !line.trim().starts_with('#'))
                     .map(|line| MessageTemplate {
