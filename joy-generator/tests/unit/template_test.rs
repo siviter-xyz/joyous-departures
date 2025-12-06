@@ -1,4 +1,5 @@
-use joy_generator::{CoreGoodbyeOptions, template::replace_template_variables};
+use joy_generator::{CoreGoodbyeOptions};
+use joy_generator::template::replace_template_variables;
 
 #[test]
 fn test_replace_name_with_custom_value() {
