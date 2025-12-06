@@ -15,6 +15,19 @@ Joy Goodbye is a high-performance library that generates random, warm sign-off m
 - 🌐 **Browser Ready**: TypeScript bindings use WASM for browser support
 - 📦 **Easy to Use**: Simple API, works with pnpm and uv
 
+## Template Variables
+
+Messages can include template variables that are replaced with custom values or defaults:
+
+| Variable | Default Value | Format | Description |
+|----------|--------------|--------|-------------|
+| `{name}` | `"Good Soul"` | Any string (max 50 chars) | Recipient's name |
+| `{location}` | `"The World"` | Any string | Location context |
+| `{date}` | Current date | `YYYY-MM-DD` | Current date in specified timezone |
+| `{time}` | Current time | `HH:MM` | Current time in specified timezone |
+
+**Note**: Not all messages include template variables. Some messages are simple phrases without any variables.
+
 ## Installation
 
 ### TypeScript/JavaScript
@@ -49,10 +62,14 @@ console.log(message); // "Wishing you a joyous day, Alice ❤️"
 ### Python
 
 ```python
+import asyncio
 from joy_goodbye import generate_goodbye
 
-message = generate_goodbye(template_args={"name": "Alice"})
-print(message)  # "Wishing you a joyous day, Alice ❤️"
+async def main():
+    message = await generate_goodbye(template_args={"name": "Alice"})
+    print(message)  # "Wishing you a joyous day, Alice ❤️"
+
+asyncio.run(main())
 ```
 
 ## Performance

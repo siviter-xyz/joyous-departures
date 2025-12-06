@@ -2,7 +2,6 @@
 # 360 warm, heartfelt sign-off messages
 # Format: One message per line, may include template variables {name}, {location}, {date}, {time}
 # Messages may include emojis where appropriate
-
 Wishing you a liberated day, {name}❤️
 Until we meet again, {name}✨
 May your path be filled with joy, {name}🌻
@@ -323,43 +322,43 @@ Sending calm from {location}, {name}🧘
 Take a moment to breathe, {name}🌬️
 With boundless hope, {name}🔮
 Until we celebrate again, {name}🎉
-Until we meet again
-Take care
-With love
-Until next time
-Farewell
-See you soon
-Until then
-Take it easy
-All the best
-Wishing you well
-Until we reconnect
-Stay well
-With warm regards
-Until our paths cross again
-Take gentle care
-With fondness
-Until we share another moment
-Wishing you peace
-May happiness find you
-With gratitude
-Until we laugh together again
-Sending love
-Take your time
-With appreciation
-Until we celebrate again
-Wishing you joy
-May your days be bright
-With heartfelt wishes
-Until we create more memories
-Take a moment to breathe
-With boundless hope
-Until the stars align again
-Wishing you clarity
-May your spirit soar
-With gentle thoughts
-Until we share another moment
-Sending sunshine
-With deep appreciation
-Until we cross paths again
-Take care, beautiful soul
+May your journey be filled with wonder, {name}🌟
+Sending stardust your way, {name}✨
+Until our stories intertwine again, {name}📖
+Wishing you cosmic joy from {location}, {name}🌌
+May your heart dance with delight, {name}💃
+Until we paint more memories together, {name}🎨
+Sending you moonbeams and sunshine, {name}🌙☀️
+May your path sparkle with possibilities, {name}💫
+Until we share another adventure, {name}🗺️
+Wishing you boundless creativity, {name}🎭
+May your days be sprinkled with magic, {name}✨
+Until we weave more stories, {name}🧵
+Sending you aurora dreams from {location}, {name}🌠
+May your spirit bloom like spring, {name}🌸
+Until we dance under the stars again, {name}⭐
+Wishing you ocean-deep peace, {name}🌊
+May your laughter echo through time, {name}😊
+Until we create more beautiful moments, {name}💎
+Sending you butterfly wishes, {name}🦋
+May your dreams take root and flourish, {name}🌱
+Until we share another sunrise, {name}🌅
+Wishing you mountain-high joy, {name}⛰️
+May your heart sing with happiness, {name}🎵
+Until we explore new horizons together, {name}🌄
+Sending you rainbow blessings from {location}, {name}🌈
+May your days be wrapped in warmth, {name}🧣
+Until we light up each other's worlds again, {name}💡
+Wishing you forest-deep tranquility, {name}🌲
+May your journey be as bright as you are, {name}☀️
+Until we share another cup of joy, {name}☕
+Sending you comet trails of happiness, {name}☄️
+May your path be lined with kindness, {name}💝
+Until we build more bridges together, {name}🌉
+Wishing you galaxy-wide possibilities, {name}🌌
+May your heart be a garden of joy, {name}🌺
+Until we sail on new adventures, {name}⛵
+Sending you northern lights of hope, {name}🌌
+May your days be a masterpiece, {name}🎨
+Until we write the next chapter, {name}📝
+Wishing you infinite moments of bliss, {name}∞
