@@ -23,27 +23,27 @@ echo ""
 
 # Basic test
 echo "1. Basic generation:"
-python -c "from joy_goodbye import generate_goodbye; print(generate_goodbye())"
+python -c "import asyncio; from joy_goodbye import generate_goodbye; print(asyncio.run(generate_goodbye()))"
 echo ""
 
 # Custom name
 echo "2. With custom name:"
-python -c "from joy_goodbye import generate_goodbye; print(generate_goodbye(template_args={'name': 'Alice'}))"
+python -c "import asyncio; from joy_goodbye import generate_goodbye; print(asyncio.run(generate_goodbye(template_args={'name': 'Alice'})))"
 echo ""
 
 # Without emojis
 echo "3. Without emojis:"
-python -c "from joy_goodbye import generate_goodbye; print(generate_goodbye(use_emojis=False))"
+python -c "import asyncio; from joy_goodbye import generate_goodbye; print(asyncio.run(generate_goodbye(use_emojis=False)))"
 echo ""
 
 # Custom timezone
 echo "4. With custom timezone:"
-python -c "from joy_goodbye import generate_goodbye; print(generate_goodbye(timezone='America/New_York'))"
+python -c "import asyncio; from joy_goodbye import generate_goodbye; print(asyncio.run(generate_goodbye(timezone='America/New_York')))"
 echo ""
 
 # Multiple calls (randomness)
 echo "5. Multiple calls (showing randomness):"
-python -c "from joy_goodbye import generate_goodbye; [print(f'  Call {i+1}: {generate_goodbye()}') for i in range(3)]"
+python -c "import asyncio; from joy_goodbye import generate_goodbye; [print(f'  Call {i+1}: {asyncio.run(generate_goodbye())}') for i in range(3)]"
 echo ""
 
 echo "✅ Python bindings working!"
