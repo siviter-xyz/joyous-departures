@@ -2,6 +2,8 @@
 # 360 warm, heartfelt sign-off messages
 # Format: One message per line, may include template variables {name}, {location}, {date}, {time}
 # Messages may include emojis where appropriate
+
+
 Wishing you a liberated day, {name} ❤️
 Until we meet again, {name} ✨
 May your path be filled with joy, {name} 🌻
@@ -42,16 +44,16 @@ Sending calm from {location}, {name} 🧘
 Take a moment to breathe, {name} 🌬️
 With boundless hope, {name} 🔮
 Until we celebrate again, {name} 🎉
-Wishing you a liberated day, {name} ❤️
-Until we meet again, {name} ✨
-May your path be filled with joy, {name} 🌻
-Sending warmth from {location}, {name} 💙
-Take care, beautiful {name} 🌸
-With love and light, {name} 💫
-Until next time, {name} 🌟
-Wishing you peace, {name} 🕊️
-May your days be bright, {name} ☀️
-With heartfelt wishes, {name} 💝
+Wishing you a beautiful day on {date}, {name} 📅
+Until we meet again at {time}, {name} ⏰
+May {date} bring you joy, {name} 🌟
+Sending love from {location} on {date}, {name} 💌
+Until {time} when we reconnect, {name} 🕐
+Wishing you peace on this {date}, {name} 🕊️
+May {date} be filled with happiness, {name} ☀️
+Until we celebrate again at {time}, {name} 🎉
+Sending warmth on {date} from {location}, {name} 🌍
+Until {time} when our paths cross, {name} 🛤️
 Until we cross paths again, {name} 🌺
 Sending you joy from {location}, {name} 🎈
 Take gentle care, {name} 🌿
@@ -362,4 +364,3 @@ Sending you northern lights of hope, {name} 🌌
 May your days be a masterpiece, {name} 🎨
 Until we write the next chapter, {name}📝
 Wishing you infinite moments of bliss, {name} ∞
-
