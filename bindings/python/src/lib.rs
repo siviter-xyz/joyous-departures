@@ -1,6 +1,6 @@
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
-use std::collections::HashMap;
+
 
 use joy_generator::{generate_goodbye as rust_generate_goodbye, CoreGoodbyeOptions, GoodbyeError};
 
@@ -26,7 +26,7 @@ use joy_generator::{generate_goodbye as rust_generate_goodbye, CoreGoodbyeOption
     timezone = "Europe/London"
 ))]
 fn generate_goodbye(
-    py: Python,
+    _py: Python,
     language_code: Option<&str>,
     template_args: Option<Bound<'_, PyDict>>,
     use_emojis: bool,
