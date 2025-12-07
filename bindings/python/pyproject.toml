@@ -27,9 +27,9 @@ Repository = "https://github.com/siviter-xyz/joyous-departures"
 [tool.maturin]
 features = ["pyo3/extension-module"]
 module-name = "joy_generator"
-# The Python package (joyous_departures) is included via sdist-include and MANIFEST.in
-# We don't use python-source because the Python package name doesn't match the extension module name
+# Include the Python package directory (joyous_departures) in both wheels and sdists
 # The extension module is joy_generator (Rust), but the Python package is joyous_departures
+python-source = "."
 # Explicitly include the package directory in source distribution
 sdist-include = ["joyous_departures/**/*.py"]
 
