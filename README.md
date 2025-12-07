@@ -286,6 +286,35 @@ If you prefer to run checks manually:
 
 **Why this matters:** CI runs `cargo clippy --all-targets --all-features -- -D warnings`, which treats warnings as errors. The pre-commit hook ensures you catch the same issues before pushing.
 
+### Version Management
+
+**Automated Versioning with Semantic-Release:**
+
+The project uses [semantic-release](https://github.com/semantic-release/semantic-release) to automatically manage versions based on conventional commits:
+
+- **`feat:`** - Triggers minor version bump (0.1.0 → 0.2.0)
+- **`fix:`** - Triggers patch version bump (0.1.0 → 0.1.1)
+- **`feat!:`** or **`BREAKING CHANGE:`** - Triggers major version bump (0.1.0 → 1.0.0)
+
+**How it works:**
+
+1. Make commits with conventional commit messages
+2. Push to `main` branch
+3. After CI passes, semantic-release automatically:
+   - Analyzes commits since last release
+   - Determines next version
+   - Updates `Cargo.toml`, `package.json`, and `pyproject.toml`
+   - Creates git tag (e.g., `v0.1.1`)
+   - Generates/updates `CHANGELOG.md`
+   - Triggers publish workflow
+
+**Version Scripts:**
+
+- **`scripts/get-version.sh`** - Extracts version from git tags (used by build processes)
+- **`scripts/update-versions.sh`** - Updates version in all package files (used by semantic-release)
+
+For more details, see [PUBLISHING.md](PUBLISHING.md).
+
 ### Troubleshooting
 
 - **"linker `cc` not found"**: Install `build-essential` (see Prerequisites #2)
