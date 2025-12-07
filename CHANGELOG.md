@@ -1,3 +1,16 @@
+# [1.5.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.4.0...v1.5.0) (2025-12-07)
+
+
+### Bug Fixes
+
+* include Python package directory in wheels via python-source ([23a1b08](https://github.com/siviter-xyz/joyous-departures/commit/23a1b08cfd507fb1edb0090c00bbcf554cffe33a))
+* remove pkg/.gitignore to include WASM files in npm package ([af2f428](https://github.com/siviter-xyz/joyous-departures/commit/af2f428091b1b2a5dc73c0338dd9be37168aed34))
+
+
+### Features
+
+* update README ([0496bed](https://github.com/siviter-xyz/joyous-departures/commit/0496bed33e2a7ce25d4d349ac7679296770354d4))
+
 # [1.4.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.3.0...v1.4.0) (2025-12-07)
 
 
