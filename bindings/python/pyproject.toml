@@ -29,6 +29,9 @@ features = ["pyo3/extension-module"]
 module-name = "_joyous_departures"
 # Include the Python package directory so joyous_departures/__init__.py is installed
 # python-source tells maturin where to find Python source files to include
+# Using "." means maturin will look for Python packages in the current directory
+# The warning about _joyous_departures is harmless - it's looking for a Python module
+# with that name, but _joyous_departures is the Rust extension module, not a Python module
 python-source = "."
 # Explicitly include the package directory in source distribution
 sdist-include = ["joyous_departures/**/*.py"]

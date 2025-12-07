@@ -137,8 +137,12 @@ jobs:
           cd bindings/typescript
           source ~/.cargo/env || true
           wasm-pack build --target web --out-dir pkg --release
-          pnpm install
+          pnpm install --config.enable-pre-post-scripts=true
           pnpm build || true
+          # Create tarball for npm publish
+          cd pkg
+          npm pack
+          cd ..
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -147,5 +151,6 @@ jobs:
           path: |
             bindings/python/target/wheels/*.whl
             bindings/typescript/pkg/*.tgz
+          if-no-files-found: warn
 
 
