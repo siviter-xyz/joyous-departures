@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/siviter-xyz/joyous-departures/compare/v1.5.0...v1.5.1) (2025-12-07)
+
+
+### Bug Fixes
+
+* inject joyous_departures package into wheel post-build ([bd77a06](https://github.com/siviter-xyz/joyous-departures/commit/bd77a06c8792439f3d0471b12df0d3525b95e8e0))
+
 # [1.5.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.4.0...v1.5.0) (2025-12-07)
 
 
