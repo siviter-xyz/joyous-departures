@@ -11,7 +11,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false  # Don't cancel other jobs if one fails
+      fail-fast: true
       matrix:
         component: [rust, python, typescript]
     
