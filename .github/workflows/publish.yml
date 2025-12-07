@@ -141,20 +141,10 @@ jobs:
       - name: Publish to npm
         run: |
           cd bindings/typescript
-          # Try trusted publishing first (OIDC), fall back to token if not configured
-          # Trusted publishing requires: npm 11.5.1+, OIDC permissions, and package configured on npmjs.com
-          # If NPM_TOKEN is set, it will be used as fallback for initial publish
-          if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
-            echo "Using NPM_TOKEN for authentication (fallback for initial publish)"
-            npm publish --access public
-          else
-            echo "Attempting trusted publishing via OIDC"
-            npm publish --access public
-          fi
-        env:
-          # Only set NODE_AUTH_TOKEN if NPM_TOKEN secret exists (for initial publish)
-          # Once Trusted Publishing is configured, this can be removed
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Uses Trusted Publishing via OIDC (requires npm 11.5.1+)
+          # Trusted Publishing must be configured on npmjs.com before this will work
+          # See README.md for setup instructions
+          npm publish --access public
 
   publish-pypi:
     name: Publish to PyPI

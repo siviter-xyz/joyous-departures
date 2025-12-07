@@ -316,12 +316,6 @@ The project uses [semantic-release](https://github.com/semantic-release/semantic
 **Publishing Prerequisites:**
 
 Before publishing, you need to add GitHub secrets:
-- **NPM_TOKEN** (temporary, for initial publish) - npm access token
-  - **Only needed for the first publish** - after that, use Trusted Publishing (see below)
-  - Create at https://www.npmjs.com/settings/YOUR_USERNAME/tokens
-  - Select "Publish" token type (you'll need to provide 2FA code)
-  - Add as a repository secret named `NPM_TOKEN`
-  - After first publish, set up Trusted Publishing and remove this token
 - **PYPI_API_TOKEN** - PyPI API token (create at https://pypi.org/manage/account/token/)
 - **GH_PAT** (required) - GitHub Personal Access Token with `repo` scope
   - Required for semantic-release to push tags that trigger the publish workflow
@@ -329,23 +323,34 @@ Before publishing, you need to add GitHub secrets:
   - Create at https://github.com/settings/tokens
   - Add as a repository secret named `GH_PAT`
 
-**Setting up npm Trusted Publishing (Recommended):**
+**Initial npm Package Setup (One-time):**
 
-After your first manual publish, configure Trusted Publishing for automated releases:
+npm classic tokens are deprecated. You must publish the first version manually, then set up Trusted Publishing:
 
-1. Go to your package on npmjs.com: https://www.npmjs.com/package/@siviter-xyz/joyous-departures
-2. Navigate to **Settings** → **Trusted Publishers**
-3. Click **Add Trusted Publisher**
-4. Select **GitHub Actions**
-5. Configure:
-   - **Repository**: `siviter-xyz/joyous-departures`
-   - **Workflow file**: `.github/workflows/publish.yml`
-   - **Environment name**: (leave empty unless using environments)
-6. Save the configuration
+1. **Publish the first version manually:**
+   ```bash
+   cd bindings/typescript
+   npm login  # This will prompt for your npm username, password, and 2FA code
+   npm publish --access public
+   ```
 
-Once configured, the workflow will use OIDC authentication automatically. You can then:
-- Remove the `NPM_TOKEN` secret (no longer needed)
-- The workflow already has `id-token: write` permissions for OIDC
+2. **Set up Trusted Publishing on npmjs.com:**
+   - Go to your package: https://www.npmjs.com/package/@siviter-xyz/joyous-departures
+   - Navigate to **Settings** → **Trusted Publishers**
+   - Click **Add Trusted Publisher**
+   - Select **GitHub Actions**
+   - Configure:
+     - **Repository**: `siviter-xyz/joyous-departures`
+     - **Workflow file**: `.github/workflows/publish.yml` (must match exactly, including `.yml` extension)
+     - **Environment name**: (leave empty unless using environments)
+   - Save the configuration
+
+3. **Verify the workflow is ready:**
+   - The workflow already has `id-token: write` permissions for OIDC
+   - npm will be updated to the latest version automatically
+   - Future publishes will use OIDC authentication automatically
+
+**Note:** Classic npm tokens are deprecated and will be revoked on December 9, 2025. Trusted Publishing is the only supported method for automated publishing.
 
 **Manual Publishing (if needed):**
 
