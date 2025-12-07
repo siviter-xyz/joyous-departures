@@ -20,6 +20,8 @@ jobs:
   check-existing:
     name: Check if packages already exist
     runs-on: ubuntu-latest
+    # Only run if Release workflow succeeded (not skipped/failed)
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     outputs:
       version: ${{ steps.version.outputs.version }}
       npm-exists: ${{ steps.check.outputs.npm-exists }}
@@ -241,12 +243,30 @@ jobs:
           # The readme path in pyproject.toml is relative to pyproject.toml location
           cp ../../README.md README.md
           maturin build --release
+          # Maturin builds to target/wheels/ relative to workspace root (not bindings/python/target/wheels/)
+          # Verify wheel was created
+          echo "📦 Checking for built wheels:"
+          ls -lh ../../target/wheels/*.whl || echo "⚠️ No wheel found in ../../target/wheels/"
+          ls -lh target/wheels/*.whl || echo "⚠️ No wheel found in target/wheels/"
       
       - name: Publish to PyPI
         run: |
           cd bindings/python
           source .venv/bin/activate
-          twine upload target/wheels/*.whl
+          # Maturin builds to workspace root target/wheels/, not bindings/python/target/wheels/
+          # Try both locations
+          if [ -f "../../target/wheels/"*.whl ]; then
+            twine upload ../../target/wheels/*.whl
+          elif [ -f "target/wheels/"*.whl ]; then
+            twine upload target/wheels/*.whl
+          else
+            echo "❌ ERROR: No wheel files found!"
+            echo "Searched:"
+            echo "  - ../../target/wheels/*.whl"
+            echo "  - target/wheels/*.whl"
+            find . -name "*.whl" -type f 2>/dev/null || echo "No .whl files found anywhere"
+            exit 1
+          fi
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
