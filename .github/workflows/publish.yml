@@ -250,6 +250,34 @@ jobs:
           echo "📦 Checking for built wheels:"
           ls -lh ../../target/wheels/*.whl || echo "⚠️ No wheel found in ../../target/wheels/"
           ls -lh target/wheels/*.whl || echo "⚠️ No wheel found in target/wheels/"
+          
+          # Fix: python-source doesn't work when package name doesn't match module name
+          # Manually inject the joyous_departures package into the wheel
+          WHEEL=$(ls -t ../../target/wheels/*.whl 2>/dev/null | head -1 || ls -t target/wheels/*.whl 2>/dev/null | head -1)
+          if [ -n "$WHEEL" ]; then
+            echo "📦 Injecting joyous_departures package into wheel..."
+            python3 << EOF
+import zipfile
+import os
+import sys
+
+wheel_path = "$WHEEL"
+package_dir = "joyous_departures"
+
+# Open wheel in append mode
+with zipfile.ZipFile(wheel_path, 'a') as z:
+    # Add all files from the joyous_departures package directory
+    for root, dirs, files in os.walk(package_dir):
+        for file in files:
+            if file.endswith('.py'):
+                file_path = os.path.join(root, file)
+                arcname = file_path
+                z.write(file_path, arcname)
+                print(f"  Added: {arcname}")
+
+print(f"✅ Package injected into {wheel_path}")
+EOF
+          fi
       
       - name: Publish to PyPI
         run: |
