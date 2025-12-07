@@ -1,3 +1,5 @@
+#![allow(clippy::useless_conversion)] // PyResult is the correct return type for PyO3
+
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 
@@ -34,6 +36,7 @@ fn generate_goodbye(
     template_args: Option<Bound<'_, PyDict>>,
     use_emojis: bool,
     timezone: &str,
+    // clippy false positive: PyResult is the correct return type for PyO3 functions
 ) -> PyResult<String> {
     // Validate and prepare options
     let mut options = CoreGoodbyeOptions::default();
