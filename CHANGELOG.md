@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/siviter-xyz/joyous-departures/compare/v1.1.0...v1.1.1) (2025-12-07)
+
+
+### Bug Fixes
+
+* verify version instead of always updating in publish workflow ([edb3b93](https://github.com/siviter-xyz/joyous-departures/commit/edb3b932b06c403314a578f6d16ee995a0cc9ed9))
+
 # [1.1.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.0.1...v1.1.0) (2025-12-07)
 
 

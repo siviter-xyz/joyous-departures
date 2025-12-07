@@ -1,6 +1,6 @@
 {
   "name": "@siviter-xyz/joyous-departures",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Generate warm, heartfelt goodbye messages for email templates",
   "type": "module",
   "main": "./pkg/joy_generator_wasm.js",
