@@ -85,22 +85,27 @@ If you need to publish manually:
 
 ### Manual Publishing (Alternative)
 
-If you prefer to publish manually:
+If you prefer to publish manually without semantic-release:
 
 ```bash
-# 1. Update version in all files
-./scripts/version.sh
+# 1. Create a version tag
+git tag v0.1.0
 
-# 2. Build packages
+# 2. Update version in all files (if needed)
+./scripts/update-versions.sh 0.1.0
+
+# 3. Build packages
 ./scripts/build.sh
 
-# 3. Publish
+# 4. Publish
 cd bindings/typescript
 pnpm publish --access public
 
 cd ../python
 maturin publish
 ```
+
+**Note:** The `scripts/version.sh` script has been replaced by `scripts/update-versions.sh` which is used by semantic-release. For manual version updates, use `update-versions.sh` directly.
 
 ## Version Management
 

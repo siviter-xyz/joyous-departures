@@ -54,13 +54,13 @@ jobs:
           uv venv --python 3.13
           source .venv/bin/activate
           uv pip install maturin pytest pytest-asyncio
-          # Build and install the package
+          # Build and install the package in editable mode
+          # The python-source = "." in pyproject.toml should include the joyous_departures/ directory
           maturin develop
-          # Verify the package structure is correct
-          python -c "import sys; print('Python path:', sys.path)"
+          # Verify installation
           python -c "import _joyous_departures; print('✅ Rust extension module found')"
-          # Check if Python package is installed
-          python -c "import joyous_departures; print('✅ Python package found')" || (echo "❌ Python package not found. Checking installation..."; pip list | grep joyous; pip show joyous-departures; exit 1)
+          python -c "import joyous_departures; print('✅ Python package importable')" || (echo "❌ Package not importable. Debugging..."; pip list | grep joyous; pip show joyous-departures; ls -la .venv/lib/python3.13/site-packages/ | grep -i joyous; exit 1)
+          # Run tests - ensure we're in the right directory and Python can find the package
           pytest tests/ -v
       
       - name: Setup Node.js

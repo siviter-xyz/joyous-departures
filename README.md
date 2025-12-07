@@ -206,7 +206,8 @@ All scripts are located in the `scripts/` directory:
 - **`scripts/test-typescript.sh`** - Quick test of TypeScript/WASM bindings
 - **`scripts/build.sh`** - Build all packages (Rust workspace, WASM, Python)
 - **`scripts/bench.sh`** - Run benchmarks for all components
-- **`scripts/version.sh`** - Extract version from git tag and update all package files
+- **`scripts/get-version.sh`** - Extract version from git tag (used by build processes)
+- **`scripts/update-versions.sh`** - Update version in all package files (used by semantic-release)
 - **`scripts/publish.sh`** - Publish packages to npm and PyPI (manual publishing)
 
 ### Required Stack
