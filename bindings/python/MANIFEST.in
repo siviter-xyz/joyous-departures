@@ -2,6 +2,6 @@
 include joyous_departures/**/*.py
 recursive-include joyous_departures *.py
 
-# Include README from repo root
-include ../../README.md
+# Include README (copied to this directory before build)
+include README.md
 
