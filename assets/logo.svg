@@ -21,6 +21,18 @@
   <!-- Subtle background circle -->
   <circle cx="128" cy="128" r="118" fill="url(#warmGradient)" opacity="0.12"/>
   
+  <!-- Bigger chat icon (behind heart, left side) -->
+  <g transform="translate(50, 85)">
+    <path d="M 0 0 L 50 0 L 50 35 L 25 35 L 15 45 L 15 35 L 0 35 Z" 
+          fill="#FFD93D" 
+          opacity="0.85" 
+          stroke="#FF8E53" 
+          stroke-width="2.5"
+          rx="4"/>
+    <circle cx="18" cy="17" r="3.5" fill="#FF6B6B" opacity="0.7"/>
+    <circle cx="32" cy="17" r="3.5" fill="#FF6B6B" opacity="0.7"/>
+  </g>
+  
   <!-- Main heart shape - cleaner path -->
   <path d="M 128 95 
            C 115 85, 95 88, 90 102 
@@ -44,18 +56,6 @@
           rx="3"/>
     <circle cx="12" cy="12" r="2.5" fill="#FF6B6B" opacity="0.7"/>
     <circle cx="23" cy="12" r="2.5" fill="#FF6B6B" opacity="0.7"/>
-  </g>
-  
-  <!-- Bigger chat icon (replacing orange squiggle, top-right) -->
-  <g transform="translate(165, 75)">
-    <path d="M 0 0 L 50 0 L 50 35 L 25 35 L 15 45 L 15 35 L 0 35 Z" 
-          fill="#FFD93D" 
-          opacity="0.95" 
-          stroke="#FF8E53" 
-          stroke-width="2.5"
-          rx="4"/>
-    <circle cx="18" cy="17" r="3.5" fill="#FF6B6B" opacity="0.8"/>
-    <circle cx="32" cy="17" r="3.5" fill="#FF6B6B" opacity="0.8"/>
   </g>
   
   <!-- Refined sparkles with varying sizes -->

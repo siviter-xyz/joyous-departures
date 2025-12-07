@@ -1,5 +1,9 @@
 #!/bin/bash
 # Setup git hooks from .githooks directory
+# 
+# Note: .git/hooks/ is not tracked by git (it's in the .git directory).
+# This script copies hooks from .githooks/ (which IS tracked) to .git/hooks/
+# so that each developer can install the hooks locally.
 set -e
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"

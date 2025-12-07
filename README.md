@@ -268,6 +268,8 @@ The easiest way to ensure code quality is to install the pre-commit hook, which 
 ./scripts/setup-git-hooks.sh
 ```
 
+**How it works:** Git hooks in `.git/hooks/` are not tracked by git (they're local to each repository clone). The hooks are stored in `.githooks/` (which IS tracked), and `setup-git-hooks.sh` copies them to `.git/hooks/` for each developer.
+
 After setup, the pre-commit hook will automatically run `./scripts/lint.sh` before each commit. If linting fails, the commit will be blocked.
 
 **Manual alternative:**
