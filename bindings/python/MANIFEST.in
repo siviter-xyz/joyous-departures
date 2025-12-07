@@ -1,0 +1,4 @@
+# Include the Python package directory
+include joyous_departures/**/*.py
+recursive-include joyous_departures *.py
+
