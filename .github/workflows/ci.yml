@@ -57,10 +57,10 @@ jobs:
           # Build and install the package in editable mode
           # The python-source = "." in pyproject.toml should include the joyous_departures/ directory
           maturin develop
-          # Verify installation
+          # Verify installation - check both extension module and Python package
           python -c "import _joyous_departures; print('✅ Rust extension module found')"
-          python -c "import joyous_departures; print('✅ Python package importable')" || (echo "❌ Package not importable. Debugging..."; pip list | grep joyous; pip show joyous-departures; ls -la .venv/lib/python3.13/site-packages/ | grep -i joyous; exit 1)
-          # Run tests - ensure we're in the right directory and Python can find the package
+          python -c "import joyous_departures; print('✅ Python package importable')" || (echo "❌ Package not importable. Debugging..."; pip list | grep joyous; pip show joyous-departures; find .venv/lib/python3.13/site-packages/ -name "*joyous*" 2>/dev/null || echo "No joyous files in site-packages"; exit 1)
+          # Run tests - pytest should be able to find the package after maturin develop
           pytest tests/ -v
       
       - name: Setup Node.js
