@@ -21,7 +21,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # IMPORTANT: Use a Personal Access Token (PAT) instead of GITHUB_TOKEN
+          # Tags pushed by GITHUB_TOKEN don't trigger workflows in GitHub Actions
+          # Create a PAT with 'repo' scope and add it as GH_PAT secret
+          # If GH_PAT is not set, fall back to GITHUB_TOKEN (may not trigger workflows)
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
       
       - name: Setup Node.js
         uses: actions/setup-node@v4

@@ -318,6 +318,10 @@ The project uses [semantic-release](https://github.com/semantic-release/semantic
 Before publishing, you need to add GitHub secrets:
 - **NPM_TOKEN** - npm access token (create at https://www.npmjs.com/settings/YOUR_USERNAME/tokens)
 - **PYPI_API_TOKEN** - PyPI API token (create at https://pypi.org/manage/account/token/)
+- **GH_PAT** (recommended) - GitHub Personal Access Token with `repo` scope
+  - Required for semantic-release to push tags that trigger the publish workflow
+  - Create at https://github.com/settings/tokens
+  - If not set, the workflow will use GITHUB_TOKEN (tags may not trigger workflows)
 
 **Manual Publishing (if needed):**
 
