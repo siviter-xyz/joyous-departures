@@ -35,6 +35,42 @@ Before first publish, you may need to:
 
 ### Automatic Publishing (Recommended)
 
+**Semantic Release Workflow:**
+
+The project uses [semantic-release](https://github.com/semantic-release/semantic-release) to automatically:
+- Analyze commit messages (conventional commits)
+- Determine version bump (major/minor/patch)
+- Update version in all package files
+- Create git tag
+- Generate changelog
+- Trigger publish workflow
+
+**How it works:**
+
+1. **Make commits with conventional commit messages:**
+   ```bash
+   git commit -m "feat: add new feature"      # Triggers minor version bump
+   git commit -m "fix: fix bug"                # Triggers patch version bump
+   git commit -m "feat!: breaking change"     # Triggers major version bump
+   ```
+
+2. **Push to main branch:**
+   ```bash
+   git push origin main
+   ```
+
+3. **After CI passes, semantic-release will:**
+   - Analyze commits since last release
+   - Determine next version
+   - Update `Cargo.toml`, `package.json`, and `pyproject.toml`
+   - Create git tag (e.g., `v0.1.1`)
+   - Generate/update `CHANGELOG.md`
+   - Push tag and changes to repository
+   - Trigger publish workflow automatically
+
+**Manual Tag Publishing (Alternative):**
+
+If you need to publish manually:
 1. **Create a version tag:**
    ```bash
    git tag v0.1.0

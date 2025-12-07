@@ -4,6 +4,8 @@ build-backend = "maturin"
 
 [project]
 name = "joyous-departures"
+# Version is managed by semantic-release and updated via scripts/update-versions.sh
+# For local development, this can be set manually or extracted from git tags
 version = "0.1.0"
 description = "Generate warm, heartfelt goodbye messages for email templates"
 readme = "../../README.md"

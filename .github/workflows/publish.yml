@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     tags:
-      - 'v*.*.*'  # Trigger on semantic version tags like v1.0.0
+      - 'v*.*.*'  # Trigger on semantic version tags like v1.0.0 (created by semantic-release)
 
 jobs:
   publish-npm:
