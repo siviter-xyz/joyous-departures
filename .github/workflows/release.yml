@@ -43,7 +43,9 @@ jobs:
       - name: Run semantic-release
         id: release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use PAT - tags pushed by GITHUB_TOKEN don't trigger workflows
+          # GH_PAT secret is required for publish workflow to trigger
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         run: |
