@@ -55,6 +55,8 @@ jobs:
           source .venv/bin/activate
           uv pip install maturin pytest pytest-asyncio
           maturin develop
+          # Verify installation
+          python -c "import joyous_departures; print('✅ Package installed successfully')" || (echo "❌ Package not found, checking installation..." && pip list | grep joyous && exit 1)
           pytest tests/ -v
       
       - name: Setup Node.js
