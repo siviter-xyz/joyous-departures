@@ -1,3 +1,18 @@
+# [1.3.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.2.0...v1.3.0) (2025-12-07)
+
+
+### Bug Fixes
+
+* add verification step for pkg directory before npm publish ([23ba99b](https://github.com/siviter-xyz/joyous-departures/commit/23ba99b721e3a69b3e835e93bf054da04c6dc573))
+* correct import paths in npm package and PyPI publish logic ([e5bbc2c](https://github.com/siviter-xyz/joyous-departures/commit/e5bbc2c1ed9bb1eb2f55a5c95736e1dacef7c8c0))
+* correct PyPI publish check logic ([80ae3b2](https://github.com/siviter-xyz/joyous-departures/commit/80ae3b25f5677f78abf6e492cef1427857301edb))
+* ts example ([3ebdc74](https://github.com/siviter-xyz/joyous-departures/commit/3ebdc7418ae0870fa668adb3b73a8f2cf51684a6))
+
+
+### Features
+
+* add prepublishOnly to ensure WASM bundle is built ([095c6e9](https://github.com/siviter-xyz/joyous-departures/commit/095c6e9e5488a7c86ac1ece9dd445812ba7930a3))
+
 # [1.2.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.1.1...v1.2.0) (2025-12-07)
 
 
