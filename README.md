@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="assets/logo.svg" alt="Joyous Departures" width="128" height="128">
+</div>
+
 # Joyous Departures
 
 Generate warm, heartfelt sign-off messages for email templates and other communication contexts.
@@ -193,6 +197,7 @@ asyncio.run(main())
 All scripts are located in the `scripts/` directory:
 
 - **`scripts/test.sh`** - Run all test suites (Rust, Python, TypeScript)
+- **`scripts/lint.sh`** - Run linting checks (format + clippy, same as CI) ⚠️ **Run this before committing!**
 - **`scripts/test-python.sh`** - Quick test of Python bindings with examples
 - **`scripts/test-typescript.sh`** - Quick test of TypeScript/WASM bindings
 - **`scripts/build.sh`** - Build all packages (Rust workspace, WASM, Python)
@@ -244,8 +249,24 @@ wasm-pack build --target web --out-dir pkg
 pnpm install && pnpm test  # Expected: "10 passed"
 
 # Or use the convenience scripts:
-./scripts/test.sh  # Run all tests
+./scripts/test.sh   # Run all tests
+./scripts/lint.sh   # Run linting checks (format + clippy, same as CI)
 ```
+
+### Pre-Commit Checklist
+
+**⚠️ Important: Run linting before committing!**
+
+To catch the same errors that CI will find, always run:
+```bash
+# 1. Run linting (format + clippy) - same as CI
+./scripts/lint.sh
+
+# 2. Run all tests
+./scripts/test.sh
+```
+
+**Why this matters:** CI runs `cargo clippy --all-targets --all-features -- -D warnings`, which treats warnings as errors. Running `./scripts/lint.sh` locally ensures you catch the same issues before pushing.
 
 ### Troubleshooting
 
