@@ -1,3 +1,20 @@
+# [1.4.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.3.0...v1.4.0) (2025-12-07)
+
+
+### Bug Fixes
+
+* add debug output to PyPI publish check and update version ([7bf8c62](https://github.com/siviter-xyz/joyous-departures/commit/7bf8c6277e05884dc4b546d77a3abec53b6af878))
+* correct WASM import paths to use ../pkg from src/ ([3036570](https://github.com/siviter-xyz/joyous-departures/commit/3036570d6ca3cb2b4f46f2a6a95f504e42abae20))
+* improve PyPI 404 handling and add local publish script ([50e3dfb](https://github.com/siviter-xyz/joyous-departures/commit/50e3dfb9f4f330be13e1d95462c11cf7614c997a))
+* improve PyPI check reliability and add better debugging ([e1618eb](https://github.com/siviter-xyz/joyous-departures/commit/e1618ebfed4a2826157796829e7b6626a68f2cc8))
+* prevent publish on skipped release and fix PyPI wheel path ([15087bb](https://github.com/siviter-xyz/joyous-departures/commit/15087bbb00c19df9e52af36266251d24e54044de))
+* resolve CI and PyPI publish issues ([2c36298](https://github.com/siviter-xyz/joyous-departures/commit/2c36298bcbda2bf9535c9aba6807cf996e2b6fda))
+
+
+### Features
+
+* update publish.sh with better build and error handling ([b7de606](https://github.com/siviter-xyz/joyous-departures/commit/b7de6062c7105b552a0357296dbd5bf208c47d5f))
+
 # [1.3.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.2.0...v1.3.0) (2025-12-07)
 
 
