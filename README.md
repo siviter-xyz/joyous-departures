@@ -313,7 +313,29 @@ The project uses [semantic-release](https://github.com/semantic-release/semantic
 - **`scripts/get-version.sh`** - Extracts version from git tags (used by build processes)
 - **`scripts/update-versions.sh`** - Updates version in all package files (used by semantic-release)
 
-For more details, see [PUBLISHING.md](PUBLISHING.md).
+**Publishing Prerequisites:**
+
+Before publishing, you need to add GitHub secrets:
+- **NPM_TOKEN** - npm access token (create at https://www.npmjs.com/settings/YOUR_USERNAME/tokens)
+- **PYPI_API_TOKEN** - PyPI API token (create at https://pypi.org/manage/account/token/)
+
+**Manual Publishing (if needed):**
+
+If you need to publish manually without semantic-release:
+```bash
+# 1. Create a version tag
+git tag v0.1.0
+
+# 2. Update version in all files
+./scripts/update-versions.sh 0.1.0
+
+# 3. Build packages
+./scripts/build.sh
+
+# 4. Publish
+cd bindings/typescript && pnpm publish --access public
+cd ../python && maturin publish
+```
 
 ### Troubleshooting
 
