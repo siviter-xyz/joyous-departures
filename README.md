@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/logo.svg" alt="Joyous Departures" width="128" height="128">
+  <img src="assets/logo.svg" alt="Joyous Departures" width="256" height="256">
 </div>
 
 # Joyous Departures
