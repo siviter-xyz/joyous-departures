@@ -15,13 +15,77 @@ on:
         type: string
 
 jobs:
+  check-existing:
+    name: Check if packages already exist
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      npm-exists: ${{ steps.check.outputs.npm-exists }}
+      pypi-exists: ${{ steps.check.outputs.pypi-exists }}
+      should-publish: ${{ steps.check.outputs.should-publish }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event.inputs.version }}" != "" ]; then
+            # Manual trigger with version input
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            # Extract version from release workflow
+            # Get the latest tag created by semantic-release
+            git fetch --tags
+            VERSION=$(git describe --tags --abbrev=0 | sed 's/^v//')
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+      
+      - name: Check if packages already exist
+        id: check
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          # Check npm
+          if npm view @siviter-xyz/joyous-departures@$VERSION version >/dev/null 2>&1; then
+            echo "npm-exists=true" >> $GITHUB_OUTPUT
+            echo "✅ npm package v$VERSION already exists"
+          else
+            echo "npm-exists=false" >> $GITHUB_OUTPUT
+            echo "❌ npm package v$VERSION does not exist"
+          fi
+          
+          # Check PyPI
+          if curl -s "https://pypi.org/pypi/joyous-departures/$VERSION/json" >/dev/null 2>&1; then
+            echo "pypi-exists=true" >> $GITHUB_OUTPUT
+            echo "✅ PyPI package v$VERSION already exists"
+          else
+            echo "pypi-exists=false" >> $GITHUB_OUTPUT
+            echo "❌ PyPI package v$VERSION does not exist"
+          fi
+          
+          # Determine if we should publish
+          if [ "${{ steps.check.outputs.npm-exists }}" == "true" ] && [ "${{ steps.check.outputs.pypi-exists }}" == "true" ]; then
+            echo "should-publish=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Both packages already exist - skipping publish"
+          else
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+            echo "✅ Packages missing - will publish"
+          fi
+        continue-on-error: true
+
   publish-npm:
     name: Publish to npm
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: check-existing
+    if: needs.check-existing.outputs.should-publish == 'true' && needs.check-existing.outputs.npm-exists != 'true'
     
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -44,17 +108,16 @@ jobs:
         run: |
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       
-      - name: Extract version from tag
+      - name: Use version from check job
         id: version
         run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
+          echo "version=${{ needs.check-existing.outputs.version }}" >> $GITHUB_OUTPUT
+          echo "Version: ${{ needs.check-existing.outputs.version }}"
       
       - name: Update package.json version
         run: |
           cd bindings/typescript
-          pnpm version ${{ steps.version.outputs.version }} --no-git-tag-version
+          pnpm version ${{ needs.check-existing.outputs.version }} --no-git-tag-version
       
       - name: Build WASM package
         run: |
@@ -124,5 +187,3 @@ jobs:
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-
-
