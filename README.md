@@ -80,16 +80,6 @@ async def main():
 asyncio.run(main())
 ```
 
-## Performance
-
-Benchmark results (measured on standard hardware):
-
-- **Generation Time**: ~615ns per message (0.000615ms) ✅ **Well under 10ms target** (16,260x faster)
-- **Corpus Loading**: ~10ns (cached after first load)
-- **Throughput**: 1000+ concurrent calls/second ✅
-- **Memory**: <10MB total footprint ✅
-
-*Benchmarks run with: `cargo bench --manifest-path joy-generator/Cargo.toml`*
 
 ## Local Development Setup
 
@@ -162,8 +152,8 @@ Benchmark results (measured on standard hardware):
    ```bash
    source ~/.cargo/env  # Ensure cargo is in PATH
    cd joy-generator
-   cargo test           # ✅ All 18 tests should pass
-   cargo bench          # Run benchmarks (shows ~640ns generation time)
+   cargo test           # ✅ All 21 tests should pass
+   cargo bench          # Run benchmarks (shows ~615ns generation time)
    ```
 
 3. **Build and Test Python Bindings**
@@ -189,72 +179,72 @@ Benchmark results (measured on standard hardware):
    ./scripts/test.sh
    ```
 
-### Quick Test Commands
+6. **Quick Test Individual Components**
+   ```bash
+   # Test Python bindings
+   ./scripts/test-python.sh
+   
+   # Test TypeScript/WASM bindings
+   ./scripts/test-typescript.sh
+   ```
 
-**Test Python bindings:**
-```bash
-./test-python.sh
+### Available Scripts
 
-# Or manually:
-cd bindings/python
-source .venv/bin/activate
-python -c "from joyous_departures import generate_goodbye; print(generate_goodbye())"
-python -c "from joyous_departures import generate_goodbye; print(generate_goodbye(template_args={'name': 'Alice'}))"
-```
+All scripts are located in the `scripts/` directory:
 
-**Test TypeScript/WASM bindings:**
-```bash
-./test-typescript.sh
+- **`scripts/test.sh`** - Run all test suites (Rust, Python, TypeScript)
+- **`scripts/test-python.sh`** - Quick test of Python bindings with examples
+- **`scripts/test-typescript.sh`** - Quick test of TypeScript/WASM bindings
+- **`scripts/build.sh`** - Build all packages (Rust workspace, WASM, Python)
+- **`scripts/bench.sh`** - Run benchmarks for all components
+- **`scripts/version.sh`** - Extract version from git tag and update all package files
+- **`scripts/publish.sh`** - Publish packages to npm and PyPI (manual publishing)
 
-# Or manually:
-cd bindings/typescript
-pnpm exec tsx test-cli.mjs
+### Required Stack
 
-# Or via test suite:
-pnpm test
-```
+**Prerequisites:**
+- Rust 1.91.1+ (cargo, rustc)
+- build-essential (gcc 14.2.0+) + clang
+- wasm-pack 0.13.1+
+- uv 0.9.6+
+- pnpm 10.16.1+
+- Node.js 18+
+- Python 3.13+ (via uv)
+- maturin 1.10.2+ (via uv venv)
 
-### Verified Working Setup
-
-✅ **Confirmed working on this system:**
-- Rust 1.91.1 (cargo, rustc) - ✅ Installed
-- build-essential (gcc 14.2.0) + clang - ✅ Installed
-- wasm-pack 0.13.1 - ✅ Installed
-- uv 0.9.6 - ✅ Installed
-- pnpm 10.16.1 - ✅ Installed
-- Node.js v24.6.0 - ✅ Installed
-- Python 3.13.7 (via uv) - ✅ Available
-- maturin 1.10.2 (via uv venv) - ✅ Installed
-
-✅ **Test Results (Verified):**
-- Rust unit tests: **18 passed, 0 failed** ✅
-- Python E2E tests: **8 passed, 0 failed** ✅
-- TypeScript E2E tests: **10 passed, 0 failed** ✅
-- Benchmarks: **~615ns per message** (0.000615ms) ✅
+**Performance Benchmarks:**
+- **Generation Time**: ~615ns per message (0.000615ms)
   - Target: <10ms
-  - Actual: **16,260x faster than target**
-  - Corpus loading: ~10ns (cached)
+  - Actual: **16,260x faster than target** ✅
+- **Corpus Loading**: ~10ns (cached after first load)
+- **Throughput**: 1000+ concurrent calls/second ✅
+- **Memory**: <10MB total footprint ✅
 
-**To verify yourself:**
+*Run benchmarks with: `cargo bench --manifest-path joy-generator/Cargo.toml`*
+
+**To Verify Your Setup:**
 ```bash
-# Rust core
+# 1. Verify Rust core
 source ~/.cargo/env
 cd joy-generator
-cargo test      # Should show: "18 passed; 0 failed"
-cargo bench     # Should show: ~615ns for generate_goodbye
+cargo test      # Expected: "21 passed; 0 failed"
+cargo bench     # Expected: ~615ns for generate_goodbye
 
-# Python bindings
+# 2. Verify Python bindings
 cd bindings/python
 uv venv --python 3.13 && source .venv/bin/activate
-uv pip install maturin pytest
+uv pip install maturin pytest pytest-asyncio
 maturin develop
-pytest tests/test_e2e.py  # Should show: "8 passed"
+pytest tests/test_e2e.py  # Expected: "8 passed"
 
-# TypeScript/WASM (requires clang)
+# 3. Verify TypeScript/WASM (requires clang)
 cd bindings/typescript
 source ~/.cargo/env
 wasm-pack build --target web --out-dir pkg
-pnpm install && pnpm test  # ✅ Should show: "10 passed"
+pnpm install && pnpm test  # Expected: "10 passed"
+
+# Or use the convenience scripts:
+./scripts/test.sh  # Run all tests
 ```
 
 ### Troubleshooting
