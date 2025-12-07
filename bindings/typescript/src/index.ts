@@ -81,9 +81,20 @@ export async function generateGoodbye(
     options.timezone = "Europe/London";
   }
 
-  // Truncate name to 50 characters if provided
-  if (options.templateArgs?.name && options.templateArgs.name.length > 50) {
-    options.templateArgs.name = options.templateArgs.name.substring(0, 50);
+  // Validate and truncate template args to prevent excessive input
+  if (options.templateArgs) {
+    if (options.templateArgs.name && options.templateArgs.name.length > 50) {
+      options.templateArgs.name = options.templateArgs.name.substring(0, 50);
+    }
+    if (options.templateArgs.location && options.templateArgs.location.length > 100) {
+      options.templateArgs.location = options.templateArgs.location.substring(0, 100);
+    }
+    if (options.templateArgs.date && options.templateArgs.date.length > 20) {
+      options.templateArgs.date = options.templateArgs.date.substring(0, 20);
+    }
+    if (options.templateArgs.time && options.templateArgs.time.length > 10) {
+      options.templateArgs.time = options.templateArgs.time.substring(0, 10);
+    }
   }
 
   try {

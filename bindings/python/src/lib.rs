@@ -3,6 +3,10 @@ use pyo3::types::PyDict;
 
 use joy_generator::{generate_goodbye as rust_generate_goodbye, CoreGoodbyeOptions, GoodbyeError};
 
+// Constants for fallback messages
+const FALLBACK_MESSAGE_WITH_NAME: &str = "Wishing you a joyous day, {name} ❤️";
+const FALLBACK_MESSAGE_WITHOUT_TEMPLATE: &str = "Wishing you a joyous day❤️";
+
 /// Generate a warm, heartfelt goodbye message
 ///
 /// Args:
@@ -53,20 +57,28 @@ fn generate_goodbye(
     }
     options.timezone = timezone.to_string();
 
-    // Set template args
+    // Set template args with validation and truncation
     if let Some(template_dict) = template_args {
         for (key, value) in template_dict.iter() {
             let key_str = key.extract::<String>()?;
             let value_str = value.extract::<String>()?;
 
-            // Truncate name to 50 characters
-            if key_str == "name" && value_str.len() > 50 {
-                options
-                    .template_args
-                    .insert(key_str, value_str[..50].to_string());
+            // Truncate values based on key to prevent excessive input
+            let max_len = match key_str.as_str() {
+                "name" => 50,
+                "location" => 100,
+                "date" => 20,
+                "time" => 10,
+                _ => 200, // Default max for unknown keys
+            };
+
+            let truncated = if value_str.len() > max_len {
+                value_str.chars().take(max_len).collect()
             } else {
-                options.template_args.insert(key_str, value_str);
-            }
+                value_str
+            };
+
+            options.template_args.insert(key_str, truncated);
         }
     }
 
@@ -77,15 +89,14 @@ fn generate_goodbye(
         Ok(result) => Ok(result),
         Err(GoodbyeError::CorpusLoadError(_)) => {
             // Return fallback message
-            let fallback = "Wishing you a joyous day, {name} ❤️";
             let default_name = "Good Soul".to_string();
             let name = options.template_args.get("name").unwrap_or(&default_name);
-            let result = fallback.replace("{name}", name);
+            let result = FALLBACK_MESSAGE_WITH_NAME.replace("{name}", name);
             Ok(result)
         }
         Err(GoodbyeError::TemplateVariableError(_)) => {
             // Return fallback without templates
-            Ok("Wishing you a joyous day❤️".to_string())
+            Ok(FALLBACK_MESSAGE_WITHOUT_TEMPLATE.to_string())
         }
         Err(GoodbyeError::InvalidLanguageCodeError(_)) => {
             // Fallback to en-GB
