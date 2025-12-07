@@ -165,6 +165,8 @@ jobs:
           cd bindings/typescript
           source ~/.cargo/env || true
           wasm-pack build --target web --out-dir pkg --release
+          # Remove pkg/.gitignore (contains '*' which excludes all files from npm package)
+          rm -f pkg/.gitignore
           # Copy README from repo root to package directory for npm
           cp ../../README.md README.md
           # Verify pkg directory exists and contains required files
