@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "Example usage of joyous-departures"
 requires-python = ">=3.11"
 dependencies = [
-    "joyous-departures>=1.4.0",
+    "joyous-departures>=1.5.0",
 ]
 
 [build-system]

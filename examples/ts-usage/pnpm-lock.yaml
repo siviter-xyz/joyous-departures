@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@siviter-xyz/joyous-departures':
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.5.0
+        version: 1.5.0
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -180,8 +180,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@siviter-xyz/joyous-departures@1.4.0':
-    resolution: {integrity: sha512-IBmvQf48kHaYH9i0FETJurWtBy8hQfu1u8ZYEJ4NZf2qKE72Kk2dlpPQ2JDnZlNPlDx6BrhPeQUJ4waspxn24g==}
+  '@siviter-xyz/joyous-departures@1.5.0':
+    resolution: {integrity: sha512-nnXvGBOfTj74P9ZWdWgLq7MZaWmxdH3dlbQ640nCZAoFdIhqP4WPDcA0z1y46RCFuNB1gI9RZnvXzqCCwnzSWQ==}
     engines: {node: '>=18.0.0'}
 
   '@types/node@20.19.25':
@@ -296,7 +296,7 @@ snapshots:
   '@esbuild/win32-x64@0.27.1':
     optional: true
 
-  '@siviter-xyz/joyous-departures@1.4.0': {}
+  '@siviter-xyz/joyous-departures@1.5.0': {}
 
   '@types/node@20.19.25':
     dependencies:
