@@ -1,13 +1,13 @@
 {
-  "name": "@siviter-xyz/joy-goodbye",
+  "name": "@siviter-xyz/joyous-departures",
   "version": "0.1.0",
   "description": "Generate warm, heartfelt goodbye messages for email templates",
   "type": "module",
-  "main": "./pkg/joy_goodbye_wasm.js",
+  "main": "./pkg/joyous_departures_wasm.js",
   "types": "./src/index.d.ts",
   "exports": {
     ".": {
-      "import": "./pkg/joy_goodbye_wasm.js",
+      "import": "./pkg/joyous_departures_wasm.js",
       "types": "./src/index.d.ts"
     }
   },
@@ -27,7 +27,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/siviter-xyz/joy-goodbye"
+    "url": "https://github.com/siviter-xyz/joyous-departures"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

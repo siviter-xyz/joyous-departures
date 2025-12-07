@@ -16,7 +16,7 @@ if [ ! -d ".venv" ]; then
     uv venv --python 3.13
 fi
 source .venv/bin/activate
-if ! python -c "import joy_goodbye" 2>/dev/null; then
+if ! python -c "import joyous_departures" 2>/dev/null; then
     echo "Building Python extension..."
     uv pip install maturin pytest
     maturin develop

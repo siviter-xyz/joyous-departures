@@ -3,7 +3,7 @@ requires = ["maturin>=1.7,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "joy-goodbye"
+name = "joyous-departures"
 version = "0.1.0"
 description = "Generate warm, heartfelt goodbye messages for email templates"
 readme = "../../README.md"
@@ -19,10 +19,10 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/siviter-xyz/joy-goodbye"
-Repository = "https://github.com/siviter-xyz/joy-goodbye"
+Homepage = "https://github.com/siviter-xyz/joyous-departures"
+Repository = "https://github.com/siviter-xyz/joyous-departures"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
-module-name = "_joy_goodbye"
+module-name = "_joyous_departures"
 

@@ -1,11 +1,11 @@
 [package]
-name = "joy-goodbye-wasm"
+name = "joyous-departures-wasm"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "WASM bindings for joy-goodbye message generator"
+description = "WASM bindings for joyous-departures message generator"
 
 [lib]
 crate-type = ["cdylib"]

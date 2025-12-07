@@ -1,6 +1,6 @@
 # Publishing Guide
 
-This document explains how to publish `joy-goodbye` packages to npm and PyPI.
+This document explains how to publish `joyous-departures` packages to npm and PyPI.
 
 ## Prerequisites
 
@@ -28,8 +28,8 @@ You need to add two secrets to your GitHub repository:
 
 Before first publish, you may need to:
 
-- **npm**: The package `@siviter-xyz/joy-goodbye` will be created on first publish
-- **PyPI**: The package `joy-goodbye` will be created on first publish
+- **npm**: The package `@siviter-xyz/joyous-departures` will be created on first publish
+- **PyPI**: The package `joyous-departures` will be created on first publish
 
 ## Publishing Process
 
@@ -79,9 +79,10 @@ After publishing, verify packages are available:
 
 ```bash
 # npm
-pnpm info @siviter-xyz/joy-goodbye
+pnpm info @siviter-xyz/joyous-departures
 
 # PyPI
-pip index versions joy-goodbye
+pip index versions joyous-departures
 ```
+
 

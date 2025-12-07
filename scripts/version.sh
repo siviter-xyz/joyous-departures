@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version management script for joy-goodbye
+# Version management script for joyous-departures
 # Extracts version from git tag and updates all package files
 
 set -e

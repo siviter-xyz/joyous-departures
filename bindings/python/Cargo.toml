@@ -1,14 +1,14 @@
 [package]
-name = "joy-goodbye-py"
+name = "joyous-departures-py"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "Python bindings for joy-goodbye message generator"
+description = "Python bindings for joyous-departures message generator"
 
 [lib]
-name = "joy_goodbye"
+name = "joyous_departures"
 crate-type = ["cdylib"]
 
 [dependencies]

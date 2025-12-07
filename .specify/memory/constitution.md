@@ -1,4 +1,4 @@
-# Joy Goodbye Constitution
+# Joyous Departures Constitution
 
 ## Core Principles
 
@@ -99,10 +99,10 @@
 **MUST**: TypeScript bindings MUST:
 - Support both Node.js and browsers (via WASM)
 - Provide complete type definitions
-- Be importable as `import { generateGoodbye } from '@siviter-xyz/joy-goodbye'`
+- Be importable as `import { generateGoodbye } from '@siviter-xyz/joyous-departures'`
 
 **MUST**: Python bindings MUST:
-- Be installable via `uv pip install joy-goodbye`
+- Be installable via `uv pip install joyous-departures`
 - Provide async support where needed
 - Follow Python naming conventions (snake_case)
 

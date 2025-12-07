@@ -85,8 +85,8 @@ A developer wants to install the library from npm (for TypeScript) or PyPI (for 
 
 **Acceptance Scenarios**:
 
-1. **Given** a developer runs `pnpm add @siviter-xyz/joy-goodbye` (or equivalent npm command), **When** the package installs successfully, **Then** they can import and use the library in their TypeScript/JavaScript project
-2. **Given** a developer runs `uv pip install joy-goodbye` (or equivalent pip command), **When** the package installs successfully, **Then** they can import and use the library in their Python project
+1. **Given** a developer runs `pnpm add @siviter-xyz/joyous-departures` (or equivalent npm command), **When** the package installs successfully, **Then** they can import and use the library in their TypeScript/JavaScript project
+2. **Given** a developer runs `uv pip install joyous-departures` (or equivalent pip command), **When** the package installs successfully, **Then** they can import and use the library in their Python project
 3. **Given** a developer installs the package, **When** they check the package version, **Then** it displays a semantic version number
 
 ---

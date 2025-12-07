@@ -1,7 +1,7 @@
 import { describe, it, expect, bench } from "vitest";
 import { generateGoodbye } from "../src/index";
 
-describe("E2E Tests for joy-goodbye TypeScript bindings", () => {
+describe("E2E Tests for joyous-departures TypeScript bindings", () => {
   it("should generate a basic goodbye message", async () => {
     const result = await generateGoodbye();
 

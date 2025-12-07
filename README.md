@@ -1,10 +1,18 @@
-# Joy Goodbye
+# Joyous Departures
 
 Generate warm, heartfelt sign-off messages for email templates and other communication contexts.
 
 ## Overview
 
-Joy Goodbye is a high-performance library that generates random, warm sign-off messages from a pre-curated corpus. The core generation logic is implemented in Rust for speed, with language bindings provided for TypeScript (npm package) and Python (PyPI package).
+A high-performance library that generates random, warm sign-off messages from a pre-curated corpus. The core generation logic is implemented in Rust for speed, with language bindings provided for TypeScript (npm package) and Python (PyPI package).
+
+> **Over-engineered**? Most definitely.
+>
+> This project is an exploration of spec-first AI-assisted design and
+> simultaneously targetting multiple consumer languages from a high-performance Rust core.
+> It is also an ode to a cherished partner and the aspects they inspire deeply within myself and in many others ❤️
+>
+> Most importantly, as ever, because it was fun!
 
 ## Features
 
@@ -33,15 +41,15 @@ Messages can include template variables that are replaced with custom values or 
 ### TypeScript/JavaScript
 
 ```bash
-pnpm add @siviter-xyz/joy-goodbye
+pnpm add @siviter-xyz/joyous-departures
 # or
-npm install @siviter-xyz/joy-goodbye
+npm install @siviter-xyz/joyous-departures
 ```
 
 ### Python
 
 ```bash
-uv pip install joy-goodbye
+uv pip install joyous-departures
 ```
 
 ## Quick Start
@@ -51,7 +59,7 @@ See [quickstart guide](specs/001-goodbye-generator/quickstart.md) for detailed e
 ### TypeScript
 
 ```typescript
-import { generateGoodbye } from '@siviter-xyz/joy-goodbye';
+import { generateGoodbye } from '@siviter-xyz/joyous-departures';
 
 const message = await generateGoodbye({
   templateArgs: { name: 'Alice' }
@@ -63,7 +71,7 @@ console.log(message); // "Wishing you a joyous day, Alice ❤️"
 
 ```python
 import asyncio
-from joy_goodbye import generate_goodbye
+from joyous_departures import generate_goodbye
 
 async def main():
     message = await generate_goodbye(template_args={"name": "Alice"})
@@ -146,7 +154,7 @@ Benchmark results (measured on standard hardware):
 1. **Clone and Setup**
    ```bash
    git clone <repository-url>
-   cd joy-goodbye
+   cd joyous-departures
    source ~/.cargo/env  # If Rust is installed via rustup
    ```
 
@@ -190,8 +198,8 @@ Benchmark results (measured on standard hardware):
 # Or manually:
 cd bindings/python
 source .venv/bin/activate
-python -c "from joy_goodbye import generate_goodbye; print(generate_goodbye())"
-python -c "from joy_goodbye import generate_goodbye; print(generate_goodbye(template_args={'name': 'Alice'}))"
+python -c "from joyous_departures import generate_goodbye; print(generate_goodbye())"
+python -c "from joyous_departures import generate_goodbye; print(generate_goodbye(template_args={'name': 'Alice'}))"
 ```
 
 **Test TypeScript/WASM bindings:**

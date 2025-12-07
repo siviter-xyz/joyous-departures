@@ -55,7 +55,7 @@ This feature implements a high-performance Rust library that generates warm, hea
 - ✅ Performance-First Architecture: Rust core, <10ms target, 1000+ concurrent calls
 - ✅ Test-First Development: TDD required, unit + E2E + benchmark tests
 - ✅ Code Quality Standards: ruff + ty (Python), ESLint (TypeScript), cargo clippy (Rust)
-- ✅ User Experience Consistency: Consistent APIs, @siviter-xyz/joy-goodbye package name
+- ✅ User Experience Consistency: Consistent APIs, @siviter-xyz/joyous-departures package name
 - ✅ Package Management: pnpm (TypeScript), uv (Python)
 - ✅ Corpus Management: Version-controlled text file, 360 messages
 
@@ -76,7 +76,7 @@ specs/001-goodbye-generator/
 ### Source Code (repository root)
 
 ```text
-joy-goodbye/
+joyous-departures/
 ├── Cargo.toml                    # Workspace manifest
 ├── corpus/                      # Message corpus source files
 │   └── en-GB.txt                # 360 messages, one per line

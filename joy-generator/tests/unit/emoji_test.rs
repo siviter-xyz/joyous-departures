@@ -48,3 +48,4 @@ fn test_emoji_only_string() {
     assert_eq!(result, "");
 }
 
+

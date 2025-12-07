@@ -11,7 +11,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["siviter.xyz"]
 license = "MIT"
-repository = "https://github.com/siviter-xyz/joy-goodbye"
+repository = "https://github.com/siviter-xyz/joyous-departures"
 
 [workspace.dependencies]
 # Core dependencies

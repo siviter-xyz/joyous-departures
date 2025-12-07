@@ -1,13 +1,13 @@
 """
-Joy Goodbye - Generate warm, heartfelt sign-off messages
+Joyous Departures - Generate warm, heartfelt sign-off messages
 
 This package provides an async API for generating goodbye messages.
 The core implementation is in Rust for performance.
 """
 import asyncio
 from typing import Optional, Dict, Callable, Awaitable
-import _joy_goodbye
-from _joy_goodbye import generate_goodbye as _generate_goodbye_sync
+import _joyous_departures
+from _joyous_departures import generate_goodbye as _generate_goodbye_sync
 
 
 async def generate_goodbye(
@@ -33,7 +33,7 @@ async def generate_goodbye(
     
     Example:
         >>> import asyncio
-        >>> from joy_goodbye import generate_goodbye
+        >>> from joyous_departures import generate_goodbye
         >>> 
         >>> async def main():
         ...     message = await generate_goodbye(template_args={"name": "Alice"})
@@ -65,7 +65,7 @@ async def generate_goodbye(
 
 
 # Re-export the sync function as well for backwards compatibility
-from _joy_goodbye import generate_goodbye as generate_goodbye_sync
+from _joyous_departures import generate_goodbye as generate_goodbye_sync
 
 __all__ = ["generate_goodbye", "generate_goodbye_sync"]
 __version__ = "0.1.0"

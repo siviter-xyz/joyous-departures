@@ -13,16 +13,16 @@ This guide helps you get started with the Goodbye Message Generator library in y
 
 ```bash
 # Using pnpm (recommended)
-pnpm add @siviter-xyz/joy-goodbye
+pnpm add @siviter-xyz/joyous-departures
 
 # Using npm
-npm install @siviter-xyz/joy-goodbye
+npm install @siviter-xyz/joyous-departures
 ```
 
 ### Basic Usage
 
 ```typescript
-import { generateGoodbye } from '@siviter-xyz/joy-goodbye';
+import { generateGoodbye } from '@siviter-xyz/joyous-departures';
 
 // Generate a message with defaults
 const message = generateGoodbye();
@@ -56,7 +56,7 @@ const message = generateGoodbye({
 
 ```typescript
 // email-template.ts
-import { generateGoodbye } from '@siviter-xyz/joy-goodbye';
+import { generateGoodbye } from '@siviter-xyz/joyous-departures';
 
 export function generateEmailBody(recipientName: string): string {
   const body = `
@@ -76,19 +76,19 @@ export function generateEmailBody(recipientName: string): string {
 
 ```bash
 # Using uv (recommended)
-uv pip install joy-goodbye
+uv pip install joyous-departures
 
 # Using pip
-pip install joy-goodbye
+pip install joyous-departures
 ```
 
 ### Basic Usage
 
 ```python
-import joy_goodbye
+import joyous_departures
 
 # Generate a message with defaults
-message = joy_goodbye.generate_goodbye()
+message = joyous_departures.generate_goodbye()
 print(message)
 # Output: "Wishing you a liberated day, Good Soul❤️"
 ```
@@ -97,20 +97,20 @@ print(message)
 
 ```python
 # Custom name
-message = joy_goodbye.generate_goodbye(
+message = joyous_departures.generate_goodbye(
     template_args={"name": "Alice"}
 )
 # Output: "Wishing you a liberated day, Alice❤️"
 
 # Without emojis
-message = joy_goodbye.generate_goodbye(use_emojis=False)
+message = joyous_departures.generate_goodbye(use_emojis=False)
 # Output: "Wishing you a liberated day, Good Soul"
 
 # Different language (requires translator)
 def translate_to_french(lang: str, msg: str) -> str:
     return translate_sync(msg, target_lang=lang)
 
-message = joy_goodbye.generate_goodbye(
+message = joyous_departures.generate_goodbye(
     language_code="fr-FR",
     translator=translate_to_french
 )
@@ -120,7 +120,7 @@ message = joy_goodbye.generate_goodbye(
 
 ```python
 # email_template.py
-import joy_goodbye
+import joyous_departures
 
 def generate_email_body(recipient_name: str) -> str:
     body = f"""
@@ -128,7 +128,7 @@ def generate_email_body(recipient_name: str) -> str:
     
     Thank you for your inquiry. We'll get back to you soon.
     
-    {joy_goodbye.generate_goodbye(template_args={"name": recipient_name})}
+    {joyous_departures.generate_goodbye(template_args={"name": recipient_name})}
     """
     return body
 ```
@@ -149,7 +149,7 @@ const signature = generateGoodbye({
 
 ```python
 # Add to chat bot responses
-goodbye = joy_goodbye.generate_goodbye(
+goodbye = joyous_departures.generate_goodbye(
     template_args={"name": user.display_name},
     use_emojis=True  # Casual context
 )

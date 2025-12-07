@@ -1,7 +1,7 @@
-"""E2E tests for joy-goodbye Python bindings"""
+"""E2E tests for joyous-departures Python bindings"""
 
 import pytest
-from joy_goodbye import generate_goodbye
+from joyous_departures import generate_goodbye
 
 
 def test_basic_generate_goodbye():

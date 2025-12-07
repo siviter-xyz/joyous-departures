@@ -133,7 +133,7 @@ fn is_valid_timezone(tz: &str) -> bool {
 
 /// Python module definition
 #[pymodule]
-fn _joy_goodbye(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn _joyous_departures(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(generate_goodbye, m)?)?;
     m.add("__version__", "0.1.0")?;
     Ok(())

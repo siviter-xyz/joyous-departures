@@ -71,3 +71,4 @@ fn test_default_name_when_not_provided() {
     assert!(result.contains("Good Soul") || !result.contains("{"));
 }
 
+

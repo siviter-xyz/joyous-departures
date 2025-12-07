@@ -1,15 +1,15 @@
 # Python API Contract
 
-**Package**: `joy-goodbye`  
+**Package**: `joyous-departures`  
 **Version**: 1.0.0  
 **Date**: 2025-01-27
 
 ## Installation
 
 ```bash
-uv pip install joy-goodbye
+uv pip install joyous-departures
 # or
-pip install joy-goodbye
+pip install joyous-departures
 ```
 
 ## Type Definitions
@@ -78,28 +78,28 @@ async def generate_goodbye(
     
     Example:
         >>> import asyncio
-        >>> import joy_goodbye
+        >>> import joyous_departures
         >>> 
         >>> # Basic usage
-        >>> message = asyncio.run(joy_goodbye.generate_goodbye())
+        >>> message = asyncio.run(joyous_departures.generate_goodbye())
         >>> print(message)
         "Wishing you a liberated day, Good Soul❤️"
         >>> 
         >>> # With custom name
-        >>> message = asyncio.run(joy_goodbye.generate_goodbye(
+        >>> message = asyncio.run(joyous_departures.generate_goodbye(
         ...     template_args={"name": "Alice"}
         ... ))
         >>> print(message)
         "Wishing you a liberated day, Alice❤️"
         >>> 
         >>> # With location and timezone
-        >>> message = asyncio.run(joy_goodbye.generate_goodbye(
+        >>> message = asyncio.run(joyous_departures.generate_goodbye(
         ...     template_args={"location": "Paris"},
         ...     timezone="Europe/Paris"
         ... ))
         >>> 
         >>> # Without emojis
-        >>> message = asyncio.run(joy_goodbye.generate_goodbye(use_emojis=False))
+        >>> message = asyncio.run(joyous_departures.generate_goodbye(use_emojis=False))
         >>> print(message)
         "Wishing you a liberated day, Good Soul"
     """
@@ -133,9 +133,9 @@ class InvalidLanguageCodeError(Exception):
 
 ```python
 import asyncio
-import joy_goodbye
+import joyous_departures
 
-message = asyncio.run(joy_goodbye.generate_goodbye())
+message = asyncio.run(joyous_departures.generate_goodbye())
 print(message)
 # "May your path be filled with light, Good Soul✨"
 ```
@@ -143,7 +143,7 @@ print(message)
 ### Custom Name
 
 ```python
-message = asyncio.run(joy_goodbye.generate_goodbye(
+message = asyncio.run(joyous_departures.generate_goodbye(
     template_args={"name": "Alice"}
 ))
 print(message)
@@ -153,7 +153,7 @@ print(message)
 ### With Location and Timezone
 
 ```python
-message = asyncio.run(joy_goodbye.generate_goodbye(
+message = asyncio.run(joyous_departures.generate_goodbye(
     template_args={"name": "Alice", "location": "New York"},
     timezone="America/New_York"
 ))
@@ -163,7 +163,7 @@ message = asyncio.run(joy_goodbye.generate_goodbye(
 ### No Emojis
 
 ```python
-message = asyncio.run(joy_goodbye.generate_goodbye(use_emojis=False))
+message = asyncio.run(joyous_departures.generate_goodbye(use_emojis=False))
 print(message)
 # "Wishing you a liberated day, Good Soul"
 ```
@@ -176,7 +176,7 @@ async def translate_message(lang: str, msg: str) -> str:
     response = await translate_api(msg, target_lang=lang)
     return response
 
-message = asyncio.run(joy_goodbye.generate_goodbye(
+message = asyncio.run(joyous_departures.generate_goodbye(
     language_code="es-ES",
     translator=translate_message
 ))
@@ -185,7 +185,7 @@ message = asyncio.run(joy_goodbye.generate_goodbye(
 ### Using as Dictionary (Alternative API)
 
 ```python
-message = joy_goodbye.generate_goodbye(
+message = joyous_departures.generate_goodbye(
     language_code="en-US",
     template_args={"name": "Bob"},
     use_emojis=True

@@ -1,4 +1,4 @@
-//! Joy Goodbye - Generate warm, heartfelt sign-off messages
+//! Joyous Departures - Generate warm, heartfelt sign-off messages
 //!
 //! This is the core Rust library. Language bindings (Python, TypeScript) wrap this library.
 
@@ -15,3 +15,4 @@ pub use options::CoreGoodbyeOptions;
 
 // Re-export the main function
 pub use generate::generate_goodbye;
+

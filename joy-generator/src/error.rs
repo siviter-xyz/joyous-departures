@@ -19,3 +19,4 @@ pub enum GoodbyeError {
     #[error("Template variable error: {0}")]
     TemplateVariableError(String),
 }
+

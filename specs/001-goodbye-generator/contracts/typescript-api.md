@@ -1,15 +1,15 @@
 # TypeScript API Contract
 
-**Package**: `@siviter-xyz/joy-goodbye`  
+**Package**: `@siviter-xyz/joyous-departures`  
 **Version**: 1.0.0  
 **Date**: 2025-01-27
 
 ## Installation
 
 ```bash
-pnpm add @siviter-xyz/joy-goodbye
+pnpm add @siviter-xyz/joyous-departures
 # or
-npm install @siviter-xyz/joy-goodbye
+npm install @siviter-xyz/joyous-departures
 ```
 
 ## Type Definitions
@@ -102,7 +102,7 @@ interface GoodbyeTemplateArgs {
  * 
  * @example
  * ```typescript
- * import { generateGoodbye } from '@siviter-xyz/joy-goodbye';
+ * import { generateGoodbye } from '@siviter-xyz/joyous-departures';
  * 
  * // Basic usage
  * const message = await generateGoodbye();
@@ -161,7 +161,7 @@ class InvalidLanguageCodeError extends Error {
 ### Basic Usage
 
 ```typescript
-import { generateGoodbye } from '@siviter-xyz/joy-goodbye';
+import { generateGoodbye } from '@siviter-xyz/joyous-departures';
 
 const message = generateGoodbye();
 console.log(message);

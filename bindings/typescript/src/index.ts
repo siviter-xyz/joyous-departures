@@ -1,7 +1,7 @@
 // @ts-ignore - WASM module types
 import init, {
   generate_goodbye as wasm_generate_goodbye,
-} from "../pkg/joy_goodbye_wasm.js";
+} from "../pkg/joyous_departures_wasm.js";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { readFileSync } from "fs";
@@ -17,7 +17,7 @@ async function ensureWasmInitialized() {
   if (!wasmInitialized) {
     // For Node.js, load WASM file directly
     if (typeof process !== "undefined" && process.versions?.node) {
-      const wasmPath = join(__dirname, "../pkg/joy_goodbye_wasm_bg.wasm");
+      const wasmPath = join(__dirname, "../pkg/joyous_departures_wasm_bg.wasm");
       const wasmBuffer = readFileSync(wasmPath);
       await init({ module_or_path: wasmBuffer });
     } else {
