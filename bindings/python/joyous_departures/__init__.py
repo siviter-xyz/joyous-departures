@@ -6,8 +6,8 @@ The core implementation is in Rust for performance.
 """
 import asyncio
 from typing import Optional, Dict, Callable, Awaitable
-import _joyous_departures
-from _joyous_departures import generate_goodbye as _generate_goodbye_sync
+import joyous_departures
+from joyous_departures import generate_goodbye as _generate_goodbye_sync
 
 
 async def generate_goodbye(
@@ -73,7 +73,7 @@ async def generate_goodbye(
 
 
 # Re-export the sync function as well for backwards compatibility
-from _joyous_departures import generate_goodbye as generate_goodbye_sync
+from joyous_departures import generate_goodbye as generate_goodbye_sync
 
 __all__ = ["generate_goodbye", "generate_goodbye_sync"]
 __version__ = "0.1.0"
