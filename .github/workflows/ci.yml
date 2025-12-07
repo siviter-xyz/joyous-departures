@@ -7,29 +7,102 @@ on:
     branches: [main]
 
 jobs:
+  detect-changes:
+    name: Detect changed components
+    runs-on: ubuntu-latest
+    outputs:
+      rust: ${{ steps.filter.outputs.rust }}
+      python: ${{ steps.filter.outputs.python }}
+      typescript: ${{ steps.filter.outputs.typescript }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check for changes
+        id: filter
+        run: |
+          # Get list of changed files
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PRs, compare against base branch
+            git diff --name-only origin/${{ github.base_ref }}...HEAD > changed_files.txt
+          else
+            # For pushes, compare last 2 commits
+            git diff --name-only HEAD~1 HEAD > changed_files.txt
+          fi
+          
+          # Check for Rust changes (affects all components)
+          if grep -qE '^(joy-generator/|bindings/.*/src/|Cargo\.toml|Cargo\.lock)' changed_files.txt; then
+            echo "rust=true" >> $GITHUB_OUTPUT
+            echo "python=true" >> $GITHUB_OUTPUT
+            echo "typescript=true" >> $GITHUB_OUTPUT
+            echo "✅ Rust changes detected - will test all components"
+          else
+            # Check for Python-specific changes
+            if grep -qE '^bindings/python/(?!src/)' changed_files.txt; then
+              echo "python=true" >> $GITHUB_OUTPUT
+              echo "✅ Python changes detected"
+            else
+              echo "python=false" >> $GITHUB_OUTPUT
+            fi
+            
+            # Check for TypeScript-specific changes
+            if grep -qE '^bindings/typescript/(?!src/)' changed_files.txt; then
+              echo "typescript=true" >> $GITHUB_OUTPUT
+              echo "✅ TypeScript changes detected"
+            else
+              echo "typescript=false" >> $GITHUB_OUTPUT
+            fi
+            
+            # Always test Rust if no specific changes detected (safety net)
+            if ! grep -qE '^(joy-generator/|bindings/.*/src/)' changed_files.txt; then
+              echo "rust=false" >> $GITHUB_OUTPUT
+            else
+              echo "rust=true" >> $GITHUB_OUTPUT
+            fi
+          fi
+          
+          cat changed_files.txt || true
+
   test:
     name: Test
     runs-on: ubuntu-latest
+    needs: detect-changes
     strategy:
       fail-fast: true
       matrix:
         component: [rust, python, typescript]
+        include:
+          - component: rust
+            should-run: ${{ needs.detect-changes.outputs.rust }}
+          - component: python
+            should-run: ${{ needs.detect-changes.outputs.python }}
+          - component: typescript
+            should-run: ${{ needs.detect-changes.outputs.typescript }}
     
     steps:
       - uses: actions/checkout@v4
       
+      - name: Skip if no changes
+        if: matrix.should-run != 'true'
+        run: |
+          echo "⏭️ Skipping ${{ matrix.component }} tests - no relevant changes detected"
+          exit 0
+      
       - name: Install Rust
+        if: matrix.should-run == 'true'
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
       
       - name: Install build tools
+        if: matrix.should-run == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential clang
       
       - name: Test Rust
-        if: matrix.component == 'rust'
+        if: matrix.component == 'rust' && matrix.should-run == 'true'
         run: |
           source ~/.cargo/env || true
           cargo test --all-features
@@ -37,17 +110,17 @@ jobs:
           cargo clippy --all-targets --all-features -- -D warnings
       
       - name: Setup Python
-        if: matrix.component == 'python'
+        if: matrix.component == 'python' && matrix.should-run == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
       
       - name: Install uv
-        if: matrix.component == 'python'
+        if: matrix.component == 'python' && matrix.should-run == 'true'
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
       
       - name: Test Python
-        if: matrix.component == 'python'
+        if: matrix.component == 'python' && matrix.should-run == 'true'
         run: |
           cd bindings/python
           source ~/.cargo/env || true
@@ -64,22 +137,22 @@ jobs:
           PYTHONPATH=. pytest tests/ -v
       
       - name: Setup Node.js
-        if: matrix.component == 'typescript'
+        if: matrix.component == 'typescript' && matrix.should-run == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
       
       - name: Install pnpm
-        if: matrix.component == 'typescript'
+        if: matrix.component == 'typescript' && matrix.should-run == 'true'
         run: npm install -g pnpm
       
       - name: Install wasm-pack
-        if: matrix.component == 'typescript'
+        if: matrix.component == 'typescript' && matrix.should-run == 'true'
         run: |
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       
       - name: Test TypeScript
-        if: matrix.component == 'typescript'
+        if: matrix.component == 'typescript' && matrix.should-run == 'true'
         run: |
           cd bindings/typescript
           source ~/.cargo/env || true
@@ -149,7 +222,7 @@ jobs:
         with:
           name: packages
           path: |
-            bindings/python/target/wheels/*.whl
+            target/wheels/*.whl
             bindings/typescript/pkg/*.tgz
           if-no-files-found: error
 
