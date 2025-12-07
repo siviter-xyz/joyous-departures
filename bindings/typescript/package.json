@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "description": "Generate warm, heartfelt goodbye messages for email templates",
   "type": "module",
-  "main": "./pkg/joyous_departures_wasm.js",
+  "main": "./pkg/joy_generator_wasm.js",
   "types": "./src/index.d.ts",
   "exports": {
     ".": {
-      "import": "./pkg/joyous_departures_wasm.js",
+      "import": "./pkg/joy_generator_wasm.js",
       "types": "./src/index.d.ts"
     }
   },

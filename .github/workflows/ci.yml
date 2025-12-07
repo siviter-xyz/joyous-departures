@@ -137,7 +137,7 @@ jobs:
           cd bindings/typescript
           source ~/.cargo/env || true
           wasm-pack build --target web --out-dir pkg --release
-          pnpm install --config.enable-pre-post-scripts=true
+          pnpm install
           pnpm build || true
           # Create tarball for npm publish
           cd pkg
@@ -151,6 +151,6 @@ jobs:
           path: |
             bindings/python/target/wheels/*.whl
             bindings/typescript/pkg/*.tgz
-          if-no-files-found: warn
+          if-no-files-found: error
 
 

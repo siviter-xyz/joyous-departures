@@ -3,7 +3,9 @@
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 
-use joy_generator::{generate_goodbye as rust_generate_goodbye, CoreGoodbyeOptions, GoodbyeError};
+use ::joy_generator::{
+    generate_goodbye as rust_generate_goodbye, CoreGoodbyeOptions, GoodbyeError,
+};
 
 // Constants for fallback messages
 const FALLBACK_MESSAGE_WITH_NAME: &str = "Wishing you a joyous day, {name} ❤️";
@@ -147,7 +149,7 @@ fn is_valid_timezone(tz: &str) -> bool {
 
 /// Python module definition
 #[pymodule]
-fn joyous_departures(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn joy_generator(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(generate_goodbye, m)?)?;
     m.add("__version__", "0.1.0")?;
     Ok(())

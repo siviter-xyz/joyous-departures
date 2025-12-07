@@ -1,13 +1,14 @@
 [package]
-name = "joyous-departures-wasm"
+name = "joy-generator-wasm"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "WASM bindings for joyous-departures message generator"
+description = "WASM bindings for joy-generator message generator"
 
 [lib]
+name = "joy_generator_wasm"
 crate-type = ["cdylib"]
 path = "src/lib.rs"
 
