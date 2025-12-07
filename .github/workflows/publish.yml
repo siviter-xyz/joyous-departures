@@ -1,9 +1,18 @@
 name: Publish
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'  # Trigger on semantic version tags like v1.0.0 (created by semantic-release)
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.0.0)'
+        required: true
+        type: string
 
 jobs:
   publish-npm:
@@ -63,10 +72,13 @@ jobs:
   publish-pypi:
     name: Publish to PyPI
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: check-existing
+    if: needs.check-existing.outputs.should-publish == 'true' && needs.check-existing.outputs.pypi-exists != 'true'
     
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -84,17 +96,16 @@ jobs:
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
       
-      - name: Extract version from tag
+      - name: Use version from check job
         id: version
         run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
+          echo "version=${{ needs.check-existing.outputs.version }}" >> $GITHUB_OUTPUT
+          echo "Version: ${{ needs.check-existing.outputs.version }}"
       
       - name: Update pyproject.toml version
         run: |
           cd bindings/python
-          sed -i "s/^version = \".*\"/version = \"${{ steps.version.outputs.version }}\"/" pyproject.toml
+          sed -i "s/^version = \".*\"/version = \"${{ needs.check-existing.outputs.version }}\"/" pyproject.toml
       
       - name: Build Python package
         run: |
