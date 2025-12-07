@@ -1,3 +1,19 @@
+# [1.2.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.1.1...v1.2.0) (2025-12-07)
+
+
+### Bug Fixes
+
+* copy README to Python package directory for maturin ([0d2cae4](https://github.com/siviter-xyz/joyous-departures/commit/0d2cae4a7cb6eb3e5b974f8a69f2ba075108a93f))
+* correct MANIFEST.in README path ([caaabdd](https://github.com/siviter-xyz/joyous-departures/commit/caaabdd24b362ece3412cdcfb663fc9bec3b6212))
+
+
+### Features
+
+* add badges to README ([c87676f](https://github.com/siviter-xyz/joyous-departures/commit/c87676f5395876a76755f7e516548a0d63313c73))
+* add example projects and fix npm package exports ([0772c55](https://github.com/siviter-xyz/joyous-departures/commit/0772c55c7e32c362c405f618847410f2938f2605))
+* add support for npm Trusted Publishing via OIDC ([2fa68bb](https://github.com/siviter-xyz/joyous-departures/commit/2fa68bb02e5411d27dd99f51c14ee44c7474126d))
+* include README in npm and PyPI packages ([3bcb2c2](https://github.com/siviter-xyz/joyous-departures/commit/3bcb2c2cb6f2bfaf4c800404faf699ce1a493dde))
+
 ## [1.1.1](https://github.com/siviter-xyz/joyous-departures/compare/v1.1.0...v1.1.1) (2025-12-07)
 
 
