@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/logo.svg" alt="Joyous Departures" width="256" height="256">
+  <img src="https://github.com/siviter-xyz/joyous-departures/raw/main/assets/logo.svg" alt="Joyous Departures" width="256" height="256">
 </div>
 
 # Joyous Departures
