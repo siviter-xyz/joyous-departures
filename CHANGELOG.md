@@ -1,3 +1,11 @@
+## [1.5.2](https://github.com/siviter-xyz/joyous-departures/compare/v1.5.1...v1.5.2) (2025-12-07)
+
+
+### Bug Fixes
+
+* correct YAML syntax for Python script in workflow ([8e73483](https://github.com/siviter-xyz/joyous-departures/commit/8e734832b3456f7a0e27bad388454d5b000957f9))
+* trial fix ([d489367](https://github.com/siviter-xyz/joyous-departures/commit/d4893673ce5c360c6cd16850bfe8d6e3b7651aaa))
+
 ## [1.5.1](https://github.com/siviter-xyz/joyous-departures/compare/v1.5.0...v1.5.1) (2025-12-07)
 
 
