@@ -72,9 +72,12 @@ jobs:
             echo "pypi-exists=true" >> $GITHUB_OUTPUT
             PYPI_EXISTS="true"
             echo "✅ PyPI package v$VERSION already exists"
+          elif [ "$HTTP_CODE" == "404" ]; then
+            echo "pypi-exists=false" >> $GITHUB_OUTPUT
+            echo "❌ PyPI package v$VERSION does not exist (404 - will publish)"
           else
             echo "pypi-exists=false" >> $GITHUB_OUTPUT
-            echo "❌ PyPI package v$VERSION does not exist (HTTP $HTTP_CODE)"
+            echo "⚠️ PyPI check returned HTTP $HTTP_CODE (assuming doesn't exist, will attempt publish)"
           fi
           
           # Determine if we should publish
