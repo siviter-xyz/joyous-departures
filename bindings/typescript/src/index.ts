@@ -1,10 +1,11 @@
 // Import WASM module with proper types
 // wasm-pack automatically generates TypeScript definitions (.d.ts files)
 // The types are available at build time from the generated package
-import type { InitInput } from "./pkg/joy_generator_wasm.js";
+// pkg directory is at package root, so from src/ we need ../pkg/
+import type { InitInput } from "../pkg/joy_generator_wasm.js";
 import init, {
   generate_goodbye as wasm_generate_goodbye,
-} from "./pkg/joy_generator_wasm.js";
+} from "../pkg/joy_generator_wasm.js";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { readFileSync } from "fs";
@@ -23,8 +24,9 @@ let wasmInitialized = false;
 async function ensureWasmInitialized(): Promise<void> {
   if (!wasmInitialized) {
     // For Node.js, load WASM file directly
+    // pkg directory is at package root, so from src/ we need ../pkg/
     if (typeof process !== "undefined" && process.versions?.node) {
-      const wasmPath = join(__dirname, "./pkg/joy_generator_wasm_bg.wasm");
+      const wasmPath = join(__dirname, "../pkg/joy_generator_wasm_bg.wasm");
       const wasmBuffer = readFileSync(wasmPath);
       await init({ module_or_path: wasmBuffer } as InitInput);
     } else {
