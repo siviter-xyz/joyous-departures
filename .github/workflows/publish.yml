@@ -67,7 +67,11 @@ jobs:
           fi
           
           # Determine if we should publish
-          if [ "${{ steps.check.outputs.npm-exists }}" == "true" ] && [ "${{ steps.check.outputs.pypi-exists }}" == "true" ]; then
+          # Use the actual output values, not the template syntax (which doesn't work in shell)
+          NPM_EXISTS=$(echo "${{ steps.check.outputs.npm-exists }}" || echo "false")
+          PYPI_EXISTS=$(echo "${{ steps.check.outputs.pypi-exists }}" || echo "false")
+          
+          if [ "$NPM_EXISTS" == "true" ] && [ "$PYPI_EXISTS" == "true" ]; then
             echo "should-publish=false" >> $GITHUB_OUTPUT
             echo "⚠️ Both packages already exist - skipping publish"
           else
