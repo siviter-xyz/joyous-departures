@@ -79,6 +79,14 @@ jobs:
             echo "should-publish=true" >> $GITHUB_OUTPUT
             echo "✅ Packages missing - will publish"
           fi
+          
+          # Debug: Show all outputs
+          echo "📊 Check results:"
+          echo "  NPM_EXISTS: $NPM_EXISTS"
+          echo "  PYPI_EXISTS: $PYPI_EXISTS"
+          echo "  should-publish: $(grep should-publish $GITHUB_OUTPUT | cut -d'=' -f2)"
+          echo "  npm-exists output: $(grep npm-exists $GITHUB_OUTPUT | cut -d'=' -f2)"
+          echo "  pypi-exists output: $(grep pypi-exists $GITHUB_OUTPUT | cut -d'=' -f2)"
         continue-on-error: true
 
   publish-npm:
