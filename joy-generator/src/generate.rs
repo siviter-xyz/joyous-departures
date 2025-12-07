@@ -77,8 +77,10 @@ mod tests {
 
     #[test]
     fn test_generate_without_emojis() {
-        let mut options = CoreGoodbyeOptions::default();
-        options.use_emojis = false;
+        let options = CoreGoodbyeOptions {
+            use_emojis: false,
+            ..Default::default()
+        };
         let result = generate_goodbye(&options).unwrap();
         // Should not contain emojis (basic check - emoji detection may vary)
         assert!(!result.contains("❤️") || !result.contains("✨"));

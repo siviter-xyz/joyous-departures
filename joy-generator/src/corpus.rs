@@ -59,7 +59,7 @@ pub fn load_corpus() -> Result<Arc<MessageCorpus>, GoodbyeError> {
                     for (idx, msg) in messages.iter().enumerate() {
                         language_index
                             .entry(msg.language_code.clone())
-                            .or_insert_with(Vec::new)
+                            .or_default()
                             .push(idx);
                     }
 

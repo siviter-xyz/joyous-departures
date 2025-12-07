@@ -6,7 +6,7 @@ pub fn strip_emojis(text: &str) -> String {
 
 /// Check if a string contains emojis
 pub fn has_emojis(text: &str) -> bool {
-    text.chars().any(|c| is_emoji_char(c))
+    text.chars().any(is_emoji_char)
 }
 
 /// Check if a character is an emoji
@@ -15,13 +15,13 @@ fn is_emoji_char(c: char) -> bool {
     let code = c as u32;
 
     // Main emoji ranges
-    (code >= 0x1F300 && code <= 0x1F9FF) ||  // Miscellaneous Symbols and Pictographs, Emoticons
-    (code >= 0x2600 && code <= 0x26FF) ||    // Miscellaneous Symbols
-    (code >= 0x2700 && code <= 0x27BF) ||     // Dingbats
-    (code >= 0xFE00 && code <= 0xFE0F) ||    // Variation Selectors
-    (code >= 0x1F900 && code <= 0x1F9FF) ||  // Supplemental Symbols and Pictographs
-    (code >= 0x1F1E0 && code <= 0x1F1FF) ||   // Regional Indicator Symbols (flags)
-    (code >= 0x1FA00 && code <= 0x1FAFF) ||   // Chess symbols, etc.
+    (0x1F300..=0x1F9FF).contains(&code) ||  // Miscellaneous Symbols and Pictographs, Emoticons
+    (0x2600..=0x26FF).contains(&code) ||    // Miscellaneous Symbols
+    (0x2700..=0x27BF).contains(&code) ||     // Dingbats
+    (0xFE00..=0xFE0F).contains(&code) ||    // Variation Selectors
+    (0x1F900..=0x1F9FF).contains(&code) ||  // Supplemental Symbols and Pictographs
+    (0x1F1E0..=0x1F1FF).contains(&code) ||   // Regional Indicator Symbols (flags)
+    (0x1FA00..=0x1FAFF).contains(&code) ||   // Chess symbols, etc.
     // Common emoji code points
     code == 0x200D ||  // Zero Width Joiner
     code == 0x20E3 ||  // Combining Enclosing Keycap
@@ -29,56 +29,56 @@ fn is_emoji_char(c: char) -> bool {
     code == 0x2049 ||  // Exclamation Question Mark
     code == 0x2122 ||  // Trade Mark Sign
     code == 0x2139 ||  // Information Source
-    (code >= 0x2194 && code <= 0x2199) ||    // Arrows
-    (code >= 0x21A9 && code <= 0x21AA) ||    // Arrows
-    (code >= 0x231A && code <= 0x231B) ||    // Watch, Hourglass
+    (0x2194..=0x2199).contains(&code) ||    // Arrows
+    (0x21A9..=0x21AA).contains(&code) ||    // Arrows
+    (0x231A..=0x231B).contains(&code) ||    // Watch, Hourglass
     code == 0x2328 ||  // Keyboard
     code == 0x23CF ||  // Eject Symbol
-    (code >= 0x23E9 && code <= 0x23F3) ||    // Media controls
-    (code >= 0x23F8 && code <= 0x23FA) ||    // Media controls
+    (0x23E9..=0x23F3).contains(&code) ||    // Media controls
+    (0x23F8..=0x23FA).contains(&code) ||    // Media controls
     code == 0x24C2 ||  // Circled Latin Capital Letter M
-    (code >= 0x25AA && code <= 0x25AB) ||    // Geometric shapes
+    (0x25AA..=0x25AB).contains(&code) ||    // Geometric shapes
     code == 0x25B6 ||  // Play button
     code == 0x25C0 ||  // Reverse button
-    (code >= 0x25FB && code <= 0x25FE) ||    // Geometric shapes
-    (code >= 0x2600 && code <= 0x2604) ||    // Weather symbols
+    (0x25FB..=0x25FE).contains(&code) ||    // Geometric shapes
+    (0x2600..=0x2604).contains(&code) ||    // Weather symbols
     code == 0x260E ||  // Telephone
     code == 0x2611 ||  // Ballot Box with Check
-    (code >= 0x2614 && code <= 0x2615) ||    // Umbrella, Hot Beverage
+    (0x2614..=0x2615).contains(&code) ||    // Umbrella, Hot Beverage
     code == 0x2618 ||  // Shamrock
     code == 0x261D ||  // Index Pointing Up
     code == 0x2620 ||  // Skull and Crossbones
-    (code >= 0x2622 && code <= 0x2623) ||    // Radioactive, Biohazard
+    (0x2622..=0x2623).contains(&code) ||    // Radioactive, Biohazard
     code == 0x2626 ||  // Orthodox Cross
     code == 0x262A ||  // Star and Crescent
-    (code >= 0x262E && code <= 0x262F) ||     // Peace symbols
-    (code >= 0x2638 && code <= 0x263A) ||    // Wheel of Dharma, White Smiling Face
+    (0x262E..=0x262F).contains(&code) ||     // Peace symbols
+    (0x2638..=0x263A).contains(&code) ||    // Wheel of Dharma, White Smiling Face
     code == 0x2640 ||  // Female Sign
     code == 0x2642 ||  // Male Sign
-    (code >= 0x2648 && code <= 0x2653) ||     // Zodiac symbols
-    (code >= 0x2660 && code <= 0x2668) ||    // Card suits, music
+    (0x2648..=0x2653).contains(&code) ||     // Zodiac symbols
+    (0x2660..=0x2668).contains(&code) ||    // Card suits, music
     code == 0x267B ||  // Recycling Symbol
-    (code >= 0x267E && code <= 0x267F) ||    // Infinity, Wheelchair
-    (code >= 0x2692 && code <= 0x2697) ||    // Tools
+    (0x267E..=0x267F).contains(&code) ||    // Infinity, Wheelchair
+    (0x2692..=0x2697).contains(&code) ||    // Tools
     code == 0x2699 ||  // Gear
-    (code >= 0x269B && code <= 0x269C) ||    // Atom, Fleur-de-lis
-    (code >= 0x26A0 && code <= 0x26A1) ||    // Warning, High Voltage
-    (code >= 0x26AA && code <= 0x26AB) ||    // White/Black Circle
-    (code >= 0x26B0 && code <= 0x26B1) ||    // Coffin, Funeral Urn
-    (code >= 0x26BD && code <= 0x26BE) ||    // Soccer Ball, Baseball
-    (code >= 0x26C4 && code <= 0x26C5) ||     // Snowman
+    (0x269B..=0x269C).contains(&code) ||    // Atom, Fleur-de-lis
+    (0x26A0..=0x26A1).contains(&code) ||    // Warning, High Voltage
+    (0x26AA..=0x26AB).contains(&code) ||    // White/Black Circle
+    (0x26B0..=0x26B1).contains(&code) ||    // Coffin, Funeral Urn
+    (0x26BD..=0x26BE).contains(&code) ||    // Soccer Ball, Baseball
+    (0x26C4..=0x26C5).contains(&code) ||     // Snowman
     code == 0x26C8 ||  // Thunder Cloud and Rain
     code == 0x26CE ||  // Ophiuchus
     code == 0x26CF ||  // Pick
     code == 0x26D1 ||  // Helmet with White Cross
-    (code >= 0x26D3 && code <= 0x26D4) ||     // Chains, No Entry
-    (code >= 0x26E9 && code <= 0x26EA) ||    // Shinto Shrine, Church
-    (code >= 0x26F0 && code <= 0x26F5) ||    // Mountain, Beach, etc.
-    (code >= 0x26F7 && code <= 0x26FA) ||    // Skier, Ice Skate, etc.
+    (0x26D3..=0x26D4).contains(&code) ||     // Chains, No Entry
+    (0x26E9..=0x26EA).contains(&code) ||    // Shinto Shrine, Church
+    (0x26F0..=0x26F5).contains(&code) ||    // Mountain, Beach, etc.
+    (0x26F7..=0x26FA).contains(&code) ||    // Skier, Ice Skate, etc.
     code == 0x26FD ||  // Fuel Pump
     code == 0x2702 ||  // Scissors
     code == 0x2705 ||  // White Heavy Check Mark
-    (code >= 0x2708 && code <= 0x270D) ||    // Airplane, Envelope, etc.
+    (0x2708..=0x270D).contains(&code) ||    // Airplane, Envelope, etc.
     code == 0x270F ||  // Pencil
     code == 0x2712 ||  // Black Nib
     code == 0x2714 ||  // Heavy Check Mark
@@ -86,26 +86,26 @@ fn is_emoji_char(c: char) -> bool {
     code == 0x271D ||  // Latin Cross
     code == 0x2721 ||  // Star of David
     code == 0x2728 ||  // Sparkles
-    (code >= 0x2733 && code <= 0x2734) ||    // Eight-Pointed Star
+    (0x2733..=0x2734).contains(&code) ||    // Eight-Pointed Star
     code == 0x2744 ||  // Snowflake
     code == 0x2747 ||  // Sparkle
     code == 0x274C ||  // Cross Mark
     code == 0x274E ||  // Negative Squared Cross Mark
-    (code >= 0x2753 && code <= 0x2755) ||    // Question marks
+    (0x2753..=0x2755).contains(&code) ||    // Question marks
     code == 0x2757 ||  // Heavy Exclamation Mark
-    (code >= 0x2763 && code <= 0x2764) ||    // Heart
-    (code >= 0x2795 && code <= 0x2797) ||    // Plus, Minus, Division
+    (0x2763..=0x2764).contains(&code) ||    // Heart
+    (0x2795..=0x2797).contains(&code) ||    // Plus, Minus, Division
     code == 0x27A1 ||  // Rightwards Arrow
     code == 0x27B0 ||  // Curly Loop
     code == 0x27BF ||  // Double Curly Loop
-    (code >= 0x2934 && code <= 0x2935) ||    // Arrows
-    (code >= 0x2B05 && code <= 0x2B07) ||    // Arrows
-    (code >= 0x2B1B && code <= 0x2B1C) ||    // Black/White Large Square
+    (0x2934..=0x2935).contains(&code) ||    // Arrows
+    (0x2B05..=0x2B07).contains(&code) ||    // Arrows
+    (0x2B1B..=0x2B1C).contains(&code) ||    // Black/White Large Square
     code == 0x2B50 ||  // White Medium Star
     code == 0x2B55 ||  // Heavy Large Circle
     code == 0x3030 ||  // Wavy Dash
     code == 0x303D ||  // Part Alternation Mark
-    (code >= 0x3297 && code <= 0x3299) // Circled Ideographs
+    (0x3297..=0x3299).contains(&code) // Circled Ideographs
 }
 
 #[cfg(test)]
