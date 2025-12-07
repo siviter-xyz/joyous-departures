@@ -208,6 +208,8 @@ jobs:
           uv venv --python 3.13
           source .venv/bin/activate
           uv pip install maturin
+          # Copy README to package directory so maturin can find it
+          cp ../../README.md README.md
           maturin build --release
           # Maturin builds to target/wheels/ relative to workspace root
           # List the built wheel for verification

@@ -201,6 +201,9 @@ jobs:
           uv venv --python 3.13
           source .venv/bin/activate
           uv pip install maturin twine
+          # Copy README to package directory so maturin can find it
+          # The readme path in pyproject.toml is relative to pyproject.toml location
+          cp ../../README.md README.md
           maturin build --release
       
       - name: Publish to PyPI
