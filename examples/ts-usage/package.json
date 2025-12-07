@@ -1,0 +1,18 @@
+{
+  "name": "joyous-departures-ts-example",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Example usage of @siviter-xyz/joyous-departures",
+  "scripts": {
+    "start": "tsx index.ts"
+  },
+  "dependencies": {
+    "@siviter-xyz/joyous-departures": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
+

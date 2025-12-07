@@ -1,0 +1,13 @@
+[project]
+name = "joyous-departures-py-example"
+version = "1.0.0"
+description = "Example usage of joyous-departures"
+requires-python = ">=3.11"
+dependencies = [
+    "joyous-departures>=1.1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
