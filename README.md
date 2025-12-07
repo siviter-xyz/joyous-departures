@@ -150,6 +150,9 @@ asyncio.run(main())
    git clone <repository-url>
    cd joyous-departures
    source ~/.cargo/env  # If Rust is installed via rustup
+   
+   # Install pre-commit hooks (recommended)
+   ./scripts/setup-git-hooks.sh
    ```
 
 2. **Run Rust Core Tests**
@@ -197,7 +200,8 @@ asyncio.run(main())
 All scripts are located in the `scripts/` directory:
 
 - **`scripts/test.sh`** - Run all test suites (Rust, Python, TypeScript)
-- **`scripts/lint.sh`** - Run linting checks (format + clippy, same as CI) ⚠️ **Run this before committing!**
+- **`scripts/lint.sh`** - Run linting checks (format + clippy, same as CI)
+- **`scripts/setup-git-hooks.sh`** - Install pre-commit hooks (runs linting automatically)
 - **`scripts/test-python.sh`** - Quick test of Python bindings with examples
 - **`scripts/test-typescript.sh`** - Quick test of TypeScript/WASM bindings
 - **`scripts/build.sh`** - Build all packages (Rust workspace, WASM, Python)
@@ -253,11 +257,22 @@ pnpm install && pnpm test  # Expected: "10 passed"
 ./scripts/lint.sh   # Run linting checks (format + clippy, same as CI)
 ```
 
-### Pre-Commit Checklist
+### Pre-Commit Setup
 
-**⚠️ Important: Run linting before committing!**
+**Recommended: Install git hooks for automatic linting**
 
-To catch the same errors that CI will find, always run:
+The easiest way to ensure code quality is to install the pre-commit hook, which automatically runs linting checks before each commit:
+
+```bash
+# One-time setup (run this after cloning the repo)
+./scripts/setup-git-hooks.sh
+```
+
+After setup, the pre-commit hook will automatically run `./scripts/lint.sh` before each commit. If linting fails, the commit will be blocked.
+
+**Manual alternative:**
+
+If you prefer to run checks manually:
 ```bash
 # 1. Run linting (format + clippy) - same as CI
 ./scripts/lint.sh
@@ -266,7 +281,7 @@ To catch the same errors that CI will find, always run:
 ./scripts/test.sh
 ```
 
-**Why this matters:** CI runs `cargo clippy --all-targets --all-features -- -D warnings`, which treats warnings as errors. Running `./scripts/lint.sh` locally ensures you catch the same issues before pushing.
+**Why this matters:** CI runs `cargo clippy --all-targets --all-features -- -D warnings`, which treats warnings as errors. The pre-commit hook ensures you catch the same issues before pushing.
 
 ### Troubleshooting
 
