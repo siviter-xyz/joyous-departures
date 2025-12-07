@@ -114,10 +114,18 @@ jobs:
           echo "version=${{ needs.check-existing.outputs.version }}" >> $GITHUB_OUTPUT
           echo "Version: ${{ needs.check-existing.outputs.version }}"
       
-      - name: Update package.json version
+      - name: Verify package.json version matches
         run: |
           cd bindings/typescript
-          pnpm version ${{ needs.check-existing.outputs.version }} --no-git-tag-version
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          EXPECTED_VERSION="${{ needs.check-existing.outputs.version }}"
+          if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "⚠️ Version mismatch: package.json has $CURRENT_VERSION, expected $EXPECTED_VERSION"
+            echo "Updating to $EXPECTED_VERSION..."
+            pnpm version $EXPECTED_VERSION --no-git-tag-version
+          else
+            echo "✅ Version already correct: $CURRENT_VERSION"
+          fi
       
       - name: Build WASM package
         run: |
@@ -165,10 +173,18 @@ jobs:
           echo "version=${{ needs.check-existing.outputs.version }}" >> $GITHUB_OUTPUT
           echo "Version: ${{ needs.check-existing.outputs.version }}"
       
-      - name: Update pyproject.toml version
+      - name: Verify pyproject.toml version matches
         run: |
           cd bindings/python
-          sed -i "s/^version = \".*\"/version = \"${{ needs.check-existing.outputs.version }}\"/" pyproject.toml
+          CURRENT_VERSION=$(grep -E '^version = ' pyproject.toml | sed 's/version = "\(.*\)"/\1/')
+          EXPECTED_VERSION="${{ needs.check-existing.outputs.version }}"
+          if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "⚠️ Version mismatch: pyproject.toml has $CURRENT_VERSION, expected $EXPECTED_VERSION"
+            echo "Updating to $EXPECTED_VERSION..."
+            sed -i "s/^version = \".*\"/version = \"$EXPECTED_VERSION\"/" pyproject.toml
+          else
+            echo "✅ Version already correct: $CURRENT_VERSION"
+          fi
       
       - name: Build Python package
         run: |
