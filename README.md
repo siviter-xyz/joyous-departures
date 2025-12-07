@@ -4,6 +4,12 @@
 
 # Joyous Departures
 
+[![npm version](https://img.shields.io/npm/v/@siviter-xyz/joyous-departures.svg)](https://www.npmjs.com/package/@siviter-xyz/joyous-departures)
+[![PyPI version](https://img.shields.io/pypi/v/joyous-departures.svg)](https://pypi.org/project/joyous-departures/)
+[![CI](https://github.com/siviter-xyz/joyous-departures/actions/workflows/ci.yml/badge.svg)](https://github.com/siviter-xyz/joyous-departures/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Rust](https://img.shields.io/badge/rust-1.0+-orange.svg)](https://www.rust-lang.org/)
+
 Generate warm, heartfelt sign-off messages for email templates and other communication contexts.
 
 ## Overview
