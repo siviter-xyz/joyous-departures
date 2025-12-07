@@ -16,6 +16,7 @@
     "src/index.d.ts",
     "README.md"
   ],
+  "readme": "README.md",
   "keywords": [
     "goodbye",
     "sign-off",

@@ -219,6 +219,8 @@ jobs:
           cd bindings/typescript
           source ~/.cargo/env || true
           wasm-pack build --target web --out-dir pkg --release
+          # Copy README from repo root to package directory for npm
+          cp ../../README.md README.md
           pnpm install
           pnpm build || true
           # Create tarball for npm publish
