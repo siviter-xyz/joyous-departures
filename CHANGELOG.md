@@ -1,3 +1,18 @@
+# [1.1.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.0.1...v1.1.0) (2025-12-07)
+
+
+### Bug Fixes
+
+* add artifact path debugging and check both wheel locations ([45d5109](https://github.com/siviter-xyz/joyous-departures/commit/45d51097780721caaede8a32a90e6f090494978a))
+* complete publish workflow refactor with package existence checks ([f0581ea](https://github.com/siviter-xyz/joyous-departures/commit/f0581ea13c57e556190b9625ed1aed61e6db687e))
+* remove python-source to suppress maturin warning ([e6e3edd](https://github.com/siviter-xyz/joyous-departures/commit/e6e3edd795f6c09614e869eacf19e675585bc0ee))
+* simplify path detection logic for better compatibility ([4a719df](https://github.com/siviter-xyz/joyous-departures/commit/4a719df7e43f864b6fa70ed26d7e5fa685fe2017))
+
+
+### Features
+
+* add path-based test filtering and fix artifact paths ([cbd75a9](https://github.com/siviter-xyz/joyous-departures/commit/cbd75a9c8ae9e3b549babc267815694c9c39a528))
+
 ## [1.0.1](https://github.com/siviter-xyz/joyous-departures/compare/v1.0.0...v1.0.1) (2025-12-07)
 
 
