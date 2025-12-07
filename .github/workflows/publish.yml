@@ -256,13 +256,12 @@ jobs:
           WHEEL=$(ls -t ../../target/wheels/*.whl 2>/dev/null | head -1 || ls -t target/wheels/*.whl 2>/dev/null | head -1)
           if [ -n "$WHEEL" ]; then
             echo "📦 Injecting joyous_departures package into wheel..."
-            python3 << EOF
+            python3 -c "
 import zipfile
 import os
-import sys
 
-wheel_path = "$WHEEL"
-package_dir = "joyous_departures"
+wheel_path = '$WHEEL'
+package_dir = 'joyous_departures'
 
 # Open wheel in append mode
 with zipfile.ZipFile(wheel_path, 'a') as z:
@@ -273,10 +272,10 @@ with zipfile.ZipFile(wheel_path, 'a') as z:
                 file_path = os.path.join(root, file)
                 arcname = file_path
                 z.write(file_path, arcname)
-                print(f"  Added: {arcname}")
+                print(f'  Added: {arcname}')
 
-print(f"✅ Package injected into {wheel_path}")
-EOF
+print(f'✅ Package injected into {wheel_path}')
+"
           fi
       
       - name: Publish to PyPI
