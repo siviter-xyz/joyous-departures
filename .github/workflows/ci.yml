@@ -31,37 +31,42 @@ jobs:
             git diff --name-only HEAD~1 HEAD > changed_files.txt
           fi
           
-          # Check for Rust changes (affects all components)
+          # Initialize all to false
+          RUST_CHANGED=false
+          PYTHON_CHANGED=false
+          TYPESCRIPT_CHANGED=false
+          
+          # Check for Rust source changes (affects all components)
           if grep -qE '^(joy-generator/|bindings/.*/src/|Cargo\.toml|Cargo\.lock)' changed_files.txt; then
+            RUST_CHANGED=true
+            echo "✅ Rust source changes detected - will test all components"
+          fi
+          
+          # Check for Python-specific changes (non-source files)
+          if grep -qE '^bindings/python/' changed_files.txt && ! grep -qE '^bindings/python/src/' changed_files.txt; then
+            PYTHON_CHANGED=true
+            echo "✅ Python-only changes detected"
+          fi
+          
+          # Check for TypeScript-specific changes (non-source files)
+          if grep -qE '^bindings/typescript/' changed_files.txt && ! grep -qE '^bindings/typescript/src/' changed_files.txt; then
+            TYPESCRIPT_CHANGED=true
+            echo "✅ TypeScript-only changes detected"
+          fi
+          
+          # If Rust changed, test everything
+          if [ "$RUST_CHANGED" = "true" ]; then
             echo "rust=true" >> $GITHUB_OUTPUT
             echo "python=true" >> $GITHUB_OUTPUT
             echo "typescript=true" >> $GITHUB_OUTPUT
-            echo "✅ Rust changes detected - will test all components"
           else
-            # Check for Python-specific changes
-            if grep -qE '^bindings/python/(?!src/)' changed_files.txt; then
-              echo "python=true" >> $GITHUB_OUTPUT
-              echo "✅ Python changes detected"
-            else
-              echo "python=false" >> $GITHUB_OUTPUT
-            fi
-            
-            # Check for TypeScript-specific changes
-            if grep -qE '^bindings/typescript/(?!src/)' changed_files.txt; then
-              echo "typescript=true" >> $GITHUB_OUTPUT
-              echo "✅ TypeScript changes detected"
-            else
-              echo "typescript=false" >> $GITHUB_OUTPUT
-            fi
-            
-            # Always test Rust if no specific changes detected (safety net)
-            if ! grep -qE '^(joy-generator/|bindings/.*/src/)' changed_files.txt; then
-              echo "rust=false" >> $GITHUB_OUTPUT
-            else
-              echo "rust=true" >> $GITHUB_OUTPUT
-            fi
+            # Otherwise, only test what changed
+            echo "rust=$RUST_CHANGED" >> $GITHUB_OUTPUT
+            echo "python=$PYTHON_CHANGED" >> $GITHUB_OUTPUT
+            echo "typescript=$TYPESCRIPT_CHANGED" >> $GITHUB_OUTPUT
           fi
           
+          echo "Changed files:"
           cat changed_files.txt || true
 
   test:
