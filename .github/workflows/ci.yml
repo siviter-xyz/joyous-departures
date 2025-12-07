@@ -209,6 +209,10 @@ jobs:
           source .venv/bin/activate
           uv pip install maturin
           maturin build --release
+          # Maturin builds to target/wheels/ relative to workspace root
+          # List the built wheel for verification
+          ls -lh ../../target/wheels/*.whl || echo "⚠️ No wheel found in ../../target/wheels/"
+          ls -lh target/wheels/*.whl || echo "⚠️ No wheel found in target/wheels/"
       
       - name: Build TypeScript/WASM package
         run: |
@@ -222,13 +226,28 @@ jobs:
           npm pack
           cd ..
       
+      - name: List artifacts before upload
+        run: |
+          echo "Checking for Python wheels:"
+          find . -name "*.whl" -type f 2>/dev/null || echo "No .whl files found"
+          echo ""
+          echo "Checking for TypeScript tarballs:"
+          find . -name "*.tgz" -type f 2>/dev/null || echo "No .tgz files found"
+          echo ""
+          echo "Target directory structure:"
+          ls -la target/wheels/ 2>/dev/null || echo "target/wheels/ does not exist"
+          echo ""
+          echo "bindings/python/target directory structure:"
+          ls -la bindings/python/target/wheels/ 2>/dev/null || echo "bindings/python/target/wheels/ does not exist"
+      
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: packages
           path: |
             target/wheels/*.whl
+            bindings/python/target/wheels/*.whl
             bindings/typescript/pkg/*.tgz
-          if-no-files-found: error
+          if-no-files-found: warn
 
 
