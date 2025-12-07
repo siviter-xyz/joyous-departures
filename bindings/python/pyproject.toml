@@ -28,5 +28,8 @@ Repository = "https://github.com/siviter-xyz/joyous-departures"
 features = ["pyo3/extension-module"]
 module-name = "_joyous_departures"
 # Include the Python package directory so joyous_departures/__init__.py is installed
+# python-source tells maturin where to find Python source files to include
 python-source = "."
+# Explicitly include the package directory in source distribution
+sdist-include = ["joyous_departures/**/*.py"]
 
