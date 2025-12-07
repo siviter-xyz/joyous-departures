@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/siviter-xyz/joyous-departures/compare/v1.0.0...v1.0.1) (2025-12-07)
+
+
+### Bug Fixes
+
+* configure release workflow to use PAT for tag pushes ([79e7c60](https://github.com/siviter-xyz/joyous-departures/commit/79e7c60e67df69bdeefd95e5c6a1c9e230898708))
+* require GH_PAT with no fallback to GITHUB_TOKEN ([6bfc86c](https://github.com/siviter-xyz/joyous-departures/commit/6bfc86c0bcbd39f1b85c658377379e780a8f106c))
+* use GH_PAT for semantic-release GITHUB_TOKEN ([e9fbbb7](https://github.com/siviter-xyz/joyous-departures/commit/e9fbbb71450a115cda6fb2011a713a217febb3ce))
+
 # 1.0.0 (2025-12-07)
 
 
