@@ -43,6 +43,7 @@
   },
   "scripts": {
     "build": "wasm-pack build --target web --out-dir pkg",
+    "prepublishOnly": "npm run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint src tests",
