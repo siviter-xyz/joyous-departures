@@ -22,8 +22,11 @@ async def generate_goodbye(
     Generates a random warm sign-off message (async)
     
     Note: This function wraps the synchronous Rust implementation in an async executor.
-    The Rust core is synchronous for performance, but we provide an async interface
-    for compatibility with async Python codebases.
+    The Rust core is intentionally synchronous because it performs CPU-bound work
+    (string manipulation, random selection, template replacement) with no I/O operations.
+    Rust's async is designed for I/O-bound operations; for CPU-bound work, synchronous
+    code is more efficient. We provide an async interface here for compatibility with
+    async Python codebases, but the actual work runs synchronously in a thread pool.
     
     Args:
         language_code: Optional ISO 639-1 language code (default: "en-GB")
