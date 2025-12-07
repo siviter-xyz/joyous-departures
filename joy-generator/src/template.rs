@@ -3,11 +3,14 @@ use crate::error::GoodbyeError;
 use crate::options::CoreGoodbyeOptions;
 
 /// Sanitize template variable value to prevent injection
-/// Removes control characters and limits length
+/// Removes control characters (except whitespace) and limits length
 fn sanitize_template_value(value: &str, max_length: usize) -> String {
     value
         .chars()
-        .filter(|c| !c.is_control() || c.is_whitespace())
+        // Keep characters that are either:
+        // - Not control characters, OR
+        // - Control characters that are whitespace (e.g., newline, tab)
+        .filter(|c| !c.is_control() || (c.is_control() && c.is_whitespace()))
         .take(max_length)
         .collect()
 }

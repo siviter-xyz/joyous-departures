@@ -21,6 +21,10 @@ async def generate_goodbye(
     """
     Generates a random warm sign-off message (async)
     
+    Note: This function wraps the synchronous Rust implementation in an async executor.
+    The Rust core is synchronous for performance, but we provide an async interface
+    for compatibility with async Python codebases.
+    
     Args:
         language_code: Optional ISO 639-1 language code (default: "en-GB")
         template_args: Optional dict with template variables (name, location, date, time)
@@ -42,6 +46,7 @@ async def generate_goodbye(
         >>> asyncio.run(main())
     """
     # Call sync function in executor to make it async
+    # The Rust implementation is synchronous, so we run it in a thread pool executor
     loop = asyncio.get_event_loop()
     result = await loop.run_in_executor(
         None,

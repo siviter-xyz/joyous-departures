@@ -1,4 +1,7 @@
-// @ts-ignore - WASM module types
+// Import WASM module with proper types
+// wasm-pack automatically generates TypeScript definitions (.d.ts files)
+// The types are available at build time from the generated package
+import type { InitInput } from "../pkg/joyous_departures_wasm.js";
 import init, {
   generate_goodbye as wasm_generate_goodbye,
 } from "../pkg/joyous_departures_wasm.js";
@@ -13,13 +16,17 @@ const __dirname = dirname(__filename);
 // Initialize WASM module (call once)
 let wasmInitialized = false;
 
-async function ensureWasmInitialized() {
+/**
+ * Initialize WASM module (call once)
+ * Handles both Node.js (direct file read) and browser (fetch) environments
+ */
+async function ensureWasmInitialized(): Promise<void> {
   if (!wasmInitialized) {
     // For Node.js, load WASM file directly
     if (typeof process !== "undefined" && process.versions?.node) {
       const wasmPath = join(__dirname, "../pkg/joyous_departures_wasm_bg.wasm");
       const wasmBuffer = readFileSync(wasmPath);
-      await init({ module_or_path: wasmBuffer });
+      await init({ module_or_path: wasmBuffer } as InitInput);
     } else {
       // For browser, use default init (with fetch)
       await init();
@@ -98,13 +105,13 @@ export async function generateGoodbye(
   }
 
   try {
-    // Call WASM function
-    let result = wasm_generate_goodbye(
+    // Call WASM function (returns string per wasm-bindgen signature)
+    const result: string = wasm_generate_goodbye(
       options.language_code || "en-GB",
       JSON.stringify(options.templateArgs || {}),
       options.use_emojis !== false, // default true
       options.timezone || "Europe/London",
-    ) as string;
+    );
 
     // If translator callback provided and language is not en-GB, translate
     if (options.translator && languageCode !== "en-GB") {
