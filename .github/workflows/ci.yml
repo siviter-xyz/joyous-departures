@@ -124,6 +124,11 @@ jobs:
         if: matrix.component == 'python' && matrix.should-run == 'true'
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
       
+      - name: Copy README for Python tests
+        if: matrix.component == 'python' && matrix.should-run == 'true'
+        run: |
+          cp README.md bindings/python/README.md
+      
       - name: Test Python
         if: matrix.component == 'python' && matrix.should-run == 'true'
         run: |

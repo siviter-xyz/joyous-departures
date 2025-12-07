@@ -7,6 +7,8 @@ on:
       - completed
     branches:
       - main
+  # Only trigger if Release workflow succeeded (not skipped/failed)
+  # This prevents publish from running when release was skipped
   workflow_dispatch:
     inputs:
       version:
