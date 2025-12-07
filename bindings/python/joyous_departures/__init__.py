@@ -73,7 +73,7 @@ async def generate_goodbye(
 
 
 # Re-export the sync function as well for backwards compatibility
-from _joyous_departures import generate_goodbye as generate_goodbye_sync
+from joy_generator import generate_goodbye as generate_goodbye_sync
 
 __all__ = ["generate_goodbye", "generate_goodbye_sync"]
 __version__ = "0.1.0"
