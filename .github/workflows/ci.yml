@@ -11,6 +11,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false  # Don't cancel other jobs if one fails
       matrix:
         component: [rust, python, typescript]
     
@@ -52,7 +53,7 @@ jobs:
           source ~/.cargo/env || true
           uv venv --python 3.13
           source .venv/bin/activate
-          uv pip install maturin pytest
+          uv pip install maturin pytest pytest-asyncio
           maturin develop
           pytest tests/ -v
       
