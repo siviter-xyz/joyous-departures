@@ -106,7 +106,7 @@ export async function generateGoodbye(
 
   try {
     // Call WASM function (returns string per wasm-bindgen signature)
-    const result: string = wasm_generate_goodbye(
+    let result: string = wasm_generate_goodbye(
       options.language_code || "en-GB",
       JSON.stringify(options.templateArgs || {}),
       options.use_emojis !== false, // default true
