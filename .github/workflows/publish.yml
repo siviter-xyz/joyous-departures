@@ -49,8 +49,10 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           
           # Check npm
+          NPM_EXISTS="false"
           if npm view @siviter-xyz/joyous-departures@$VERSION version >/dev/null 2>&1; then
             echo "npm-exists=true" >> $GITHUB_OUTPUT
+            NPM_EXISTS="true"
             echo "✅ npm package v$VERSION already exists"
           else
             echo "npm-exists=false" >> $GITHUB_OUTPUT
@@ -58,8 +60,10 @@ jobs:
           fi
           
           # Check PyPI
+          PYPI_EXISTS="false"
           if curl -s "https://pypi.org/pypi/joyous-departures/$VERSION/json" >/dev/null 2>&1; then
             echo "pypi-exists=true" >> $GITHUB_OUTPUT
+            PYPI_EXISTS="true"
             echo "✅ PyPI package v$VERSION already exists"
           else
             echo "pypi-exists=false" >> $GITHUB_OUTPUT
@@ -67,10 +71,7 @@ jobs:
           fi
           
           # Determine if we should publish
-          # Use the actual output values, not the template syntax (which doesn't work in shell)
-          NPM_EXISTS=$(echo "${{ steps.check.outputs.npm-exists }}" || echo "false")
-          PYPI_EXISTS=$(echo "${{ steps.check.outputs.pypi-exists }}" || echo "false")
-          
+          # Use shell variables set during checks (GitHub Actions template syntax doesn't work in shell conditionals)
           if [ "$NPM_EXISTS" == "true" ] && [ "$PYPI_EXISTS" == "true" ]; then
             echo "should-publish=false" >> $GITHUB_OUTPUT
             echo "⚠️ Both packages already exist - skipping publish"
