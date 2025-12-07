@@ -33,4 +33,3 @@ criterion_group!(
     bench_corpus_loading
 );
 criterion_main!(benches);
-

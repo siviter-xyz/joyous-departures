@@ -18,7 +18,7 @@ fn sanitize_template_value(value: &str, max_length: usize) -> String {
 /// Replace template variables in a message template
 /// Supports: {name}, {location}, {date}, {time}
 /// Defaults: name="Good Soul", location="The World", date/time from timezone
-/// 
+///
 /// Variables are replaced in a specific order to prevent nested replacement issues:
 /// 1. date/time first (unlikely to contain template syntax)
 /// 2. location (may contain special chars but not template syntax)

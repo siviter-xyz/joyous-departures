@@ -15,4 +15,3 @@ pub use options::CoreGoodbyeOptions;
 
 // Re-export the main function
 pub use generate::generate_goodbye;
-

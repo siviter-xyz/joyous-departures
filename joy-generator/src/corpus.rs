@@ -33,45 +33,46 @@ static CORPUS_TEXT: &str = include_str!("../../corpus/en-GB.txt");
 pub fn load_corpus() -> Result<Arc<MessageCorpus>, GoodbyeError> {
     static CORPUS: OnceLock<Arc<MessageCorpus>> = OnceLock::new();
 
-    Ok(CORPUS.get_or_init(|| {
-        let corpus = if CORPUS_TEXT.is_empty() {
-            // Fallback if corpus is empty
-            create_fallback_corpus()
-        } else {
-            // Parse corpus (one message per line)
-            let messages: Vec<MessageTemplate> = CORPUS_TEXT
-                .lines()
-                .filter(|line| !line.trim().is_empty() && !line.trim().starts_with('#'))
-                .map(|line| MessageTemplate {
-                    template: line.trim().to_string(),
-                    language_code: "en-GB".to_string(),
-                    has_emojis: has_emojis(line),
-                })
-                .collect();
-
-            if messages.is_empty() {
+    Ok(CORPUS
+        .get_or_init(|| {
+            let corpus = if CORPUS_TEXT.is_empty() {
+                // Fallback if corpus is empty
                 create_fallback_corpus()
             } else {
-                // Build language index
-                let mut language_index: std::collections::HashMap<String, Vec<usize>> =
-                    std::collections::HashMap::new();
-                for (idx, msg) in messages.iter().enumerate() {
-                    language_index
-                        .entry(msg.language_code.clone())
-                        .or_insert_with(Vec::new)
-                        .push(idx);
-                }
+                // Parse corpus (one message per line)
+                let messages: Vec<MessageTemplate> = CORPUS_TEXT
+                    .lines()
+                    .filter(|line| !line.trim().is_empty() && !line.trim().starts_with('#'))
+                    .map(|line| MessageTemplate {
+                        template: line.trim().to_string(),
+                        language_code: "en-GB".to_string(),
+                        has_emojis: has_emojis(line),
+                    })
+                    .collect();
 
-                MessageCorpus {
-                    messages,
-                    language_index,
-                }
-            }
-        };
+                if messages.is_empty() {
+                    create_fallback_corpus()
+                } else {
+                    // Build language index
+                    let mut language_index: std::collections::HashMap<String, Vec<usize>> =
+                        std::collections::HashMap::new();
+                    for (idx, msg) in messages.iter().enumerate() {
+                        language_index
+                            .entry(msg.language_code.clone())
+                            .or_insert_with(Vec::new)
+                            .push(idx);
+                    }
 
-        Arc::new(corpus)
-    })
-    .clone())
+                    MessageCorpus {
+                        messages,
+                        language_index,
+                    }
+                }
+            };
+
+            Arc::new(corpus)
+        })
+        .clone())
 }
 
 /// Create a fallback corpus with a single default message
