@@ -20,6 +20,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
       
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
@@ -27,20 +32,21 @@ jobs:
       
       - name: Install semantic-release
         run: |
-          npm install -g semantic-release @semantic-release/changelog @semantic-release/git
+          npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/exec
       
       - name: Run semantic-release
+        id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           # Use semantic-release to determine version and create tag
+          # This will analyze commits, determine version bump, update files, and create git tag
           npx semantic-release
       
-      - name: Trigger Publish
-        if: steps.release.outputs.new_release_published == 'true'
+      - name: Summary
         run: |
-          # The publish workflow will be triggered by the new tag
-          echo "New release published, publish workflow will be triggered automatically"
+          echo "Release workflow completed"
+          echo "If a new version was determined, a git tag was created and the publish workflow will be triggered automatically"
 
