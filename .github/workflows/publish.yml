@@ -144,10 +144,20 @@ jobs:
           wasm-pack build --target web --out-dir pkg --release
           # Copy README from repo root to package directory for npm
           cp ../../README.md README.md
+          # Verify pkg directory exists and contains required files
+          echo "📦 Verifying pkg directory contents:"
+          ls -la pkg/ || echo "❌ pkg directory not found!"
+          echo "📦 pkg directory size:"
+          du -sh pkg/ || echo "❌ Cannot check pkg size"
       
       - name: Publish to npm
         run: |
           cd bindings/typescript
+          # Verify pkg exists before publishing
+          if [ ! -d "pkg" ]; then
+            echo "❌ ERROR: pkg directory missing! Cannot publish."
+            exit 1
+          fi
           # Uses Trusted Publishing via OIDC (requires npm 11.5.1+)
           # Trusted Publishing must be configured on npmjs.com before this will work
           # See README.md for setup instructions
