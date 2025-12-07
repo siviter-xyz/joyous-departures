@@ -316,18 +316,36 @@ The project uses [semantic-release](https://github.com/semantic-release/semantic
 **Publishing Prerequisites:**
 
 Before publishing, you need to add GitHub secrets:
-- **NPM_TOKEN** - npm automation token (create at https://www.npmjs.com/settings/YOUR_USERNAME/tokens)
-  - **Important**: Must be an "Automation" token type (not "Publish" or "Read-only")
-  - Automation tokens bypass 2FA requirements and are designed for CI/CD
+- **NPM_TOKEN** (temporary, for initial publish) - npm access token
+  - **Only needed for the first publish** - after that, use Trusted Publishing (see below)
   - Create at https://www.npmjs.com/settings/YOUR_USERNAME/tokens
-  - Select "Automation" token type
+  - Select "Publish" token type (you'll need to provide 2FA code)
   - Add as a repository secret named `NPM_TOKEN`
+  - After first publish, set up Trusted Publishing and remove this token
 - **PYPI_API_TOKEN** - PyPI API token (create at https://pypi.org/manage/account/token/)
 - **GH_PAT** (required) - GitHub Personal Access Token with `repo` scope
   - Required for semantic-release to push tags that trigger the publish workflow
   - Tags pushed by GITHUB_TOKEN don't trigger workflows in GitHub Actions
   - Create at https://github.com/settings/tokens
   - Add as a repository secret named `GH_PAT`
+
+**Setting up npm Trusted Publishing (Recommended):**
+
+After your first manual publish, configure Trusted Publishing for automated releases:
+
+1. Go to your package on npmjs.com: https://www.npmjs.com/package/@siviter-xyz/joyous-departures
+2. Navigate to **Settings** → **Trusted Publishers**
+3. Click **Add Trusted Publisher**
+4. Select **GitHub Actions**
+5. Configure:
+   - **Repository**: `siviter-xyz/joyous-departures`
+   - **Workflow file**: `.github/workflows/publish.yml`
+   - **Environment name**: (leave empty unless using environments)
+6. Save the configuration
+
+Once configured, the workflow will use OIDC authentication automatically. You can then:
+- Remove the `NPM_TOKEN` secret (no longer needed)
+- The workflow already has `id-token: write` permissions for OIDC
 
 **Manual Publishing (if needed):**
 
