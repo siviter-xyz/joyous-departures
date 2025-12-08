@@ -1,3 +1,19 @@
+# [1.6.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.5.2...v1.6.0) (2025-12-08)
+
+
+### Bug Fixes
+
+* missing lock bump ([26fae59](https://github.com/siviter-xyz/joyous-departures/commit/26fae59dbbc6534ee08691da656ab8c3bb00c97d))
+* **python:** use maturin native mixed project support ([d965115](https://github.com/siviter-xyz/joyous-departures/commit/d96511554c91393e46e85069afc472dc98c2e773))
+* **typescript:** add Cloudflare Workers compatibility ([0bced23](https://github.com/siviter-xyz/joyous-departures/commit/0bced23eeb97a7cfccf81eeb89d9d6d3bb8efaf8))
+
+
+### Features
+
+* add build scripts for local testing and verification ([b190078](https://github.com/siviter-xyz/joyous-departures/commit/b1900780ff60079e5b0f2c9133778d8d69013803))
+* **examples:** add comprehensive tests and local package support ([46f68f5](https://github.com/siviter-xyz/joyous-departures/commit/46f68f5e5cb398a093a237e1721996353b36493a))
+* **typescript:** migrate to tsdown for dual ESM/CommonJS builds with sourcemaps ([8f6407d](https://github.com/siviter-xyz/joyous-departures/commit/8f6407db38db6fe21bf1e8dc9f2cbbd72cefe6a8))
+
 ## [1.5.2](https://github.com/siviter-xyz/joyous-departures/compare/v1.5.1...v1.5.2) (2025-12-07)
 
 
