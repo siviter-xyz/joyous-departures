@@ -159,7 +159,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-          cache: 'pip'
       
       - name: Cache uv
         if: matrix.component == 'python' && matrix.should-run == 'true'
@@ -291,7 +290,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-          cache: 'pip'
       
       - name: Cache uv
         uses: actions/cache@v4
