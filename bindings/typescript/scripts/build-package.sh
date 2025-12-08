@@ -93,23 +93,37 @@ cat > pkg/joy_generator_wasm.js << 'WRAPPER_EOF'
 
 import * as imports from "./joy_generator_wasm_bg.js";
 
-// Import WASM module - in Workers this gives us a WebAssembly.Module
-// In Node.js/bundlers, this gives us the module object
-// Switch between both syntax for node and for workerd (Cloudflare pattern)
-import wkmod from "./joy_generator_wasm_bg.wasm";
-import * as nodemod from "./joy_generator_wasm_bg.wasm";
+// Initialize WASM module - must complete before exports are used
+// Use top-level await to ensure initialization completes
+const initPromise = (async () => {
+  if (typeof process !== "undefined" && process.release?.name === "node") {
+    // Node.js environment - read WASM file and instantiate
+    const fs = await import("fs");
+    const path = await import("path");
+    const { fileURLToPath } = await import("url");
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const wasmPath = path.join(__dirname, "joy_generator_wasm_bg.wasm");
+    const wasmBuffer = fs.readFileSync(wasmPath);
+    const wasmModule = await WebAssembly.instantiate(wasmBuffer, {
+      "./joy_generator_wasm_bg.js": imports,
+    });
+    imports.__wbg_set_wasm(wasmModule.instance.exports);
+  } else {
+    // Cloudflare Workers environment - initialize asynchronously
+    // Workers allows WebAssembly.instantiate with buffer
+    const wasmUrl = new URL("./joy_generator_wasm_bg.wasm", import.meta.url);
+    const response = await fetch(wasmUrl);
+    const wasmBuffer = await response.arrayBuffer();
+    const wasmModule = await WebAssembly.instantiate(wasmBuffer, {
+      "./joy_generator_wasm_bg.js": imports,
+    });
+    imports.__wbg_set_wasm(wasmModule.instance.exports);
+  }
+})();
 
-// Initialize based on environment (exact pattern from Cloudflare docs)
-if (typeof process !== "undefined" && process.release?.name === "node") {
-  // Node.js environment - use the module directly
-  imports.__wbg_set_wasm(nodemod);
-} else {
-  // Cloudflare Workers environment - create Instance from Module
-  const instance = new WebAssembly.Instance(wkmod, {
-    "./joy_generator_wasm_bg.js": imports,
-  });
-  imports.__wbg_set_wasm(instance.exports);
-}
+// Wait for initialization to complete
+await initPromise;
 
 // Re-export everything from the generated bindings
 export * from "./joy_generator_wasm_bg.js";
