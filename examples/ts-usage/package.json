@@ -9,7 +9,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@siviter-xyz/joyous-departures": "^1.5.0"
+    "@siviter-xyz/joyous-departures": "^1.6.1"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
