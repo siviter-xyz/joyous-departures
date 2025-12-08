@@ -156,17 +156,13 @@ jobs:
         if: matrix.component == 'typescript' && matrix.should-run == 'true'
         run: npm install -g pnpm
       
-      - name: Install wasm-pack
-        if: matrix.component == 'typescript' && matrix.should-run == 'true'
-        run: |
-          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-      
       - name: Test TypeScript
         if: matrix.component == 'typescript' && matrix.should-run == 'true'
         run: |
           cd bindings/typescript
           source ~/.cargo/env || true
-          wasm-pack build --target web --out-dir pkg
+          # Use the build script which creates Cloudflare Workers-compatible wrapper
+          bash scripts/build-package.sh
           pnpm install
           pnpm test
 
@@ -203,9 +199,6 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
       
-      - name: Install wasm-pack
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-      
       - name: Build Python package
         run: |
           cd bindings/python
@@ -225,7 +218,8 @@ jobs:
         run: |
           cd bindings/typescript
           source ~/.cargo/env || true
-          wasm-pack build --target web --out-dir pkg --release
+          # Use the build script which creates Cloudflare Workers-compatible wrapper
+          bash scripts/build-package.sh
           # Copy README from repo root to package directory for npm
           cp ../../README.md README.md
           pnpm install
