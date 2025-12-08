@@ -58,6 +58,8 @@ bindings/typescript/README.md
 .env.local
 .env.*.local
 examples/.env.local
+# Allow .example files (templates)
+!*.example
 
 # Build artifacts
 *.o
