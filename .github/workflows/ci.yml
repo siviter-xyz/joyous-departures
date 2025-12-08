@@ -100,6 +100,20 @@ jobs:
         with:
           components: rustfmt, clippy
       
+      - name: Cache Rust dependencies
+        if: matrix.should-run == 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      
       - name: Install WASM target
         if: matrix.component == 'typescript' && matrix.should-run == 'true'
         run: |
@@ -145,10 +159,25 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+          cache: 'pip'
+      
+      - name: Cache uv
+        if: matrix.component == 'python' && matrix.should-run == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/uv
+          key: ${{ runner.os }}-uv-latest
+          restore-keys: |
+            ${{ runner.os }}-uv-
       
       - name: Install uv
         if: matrix.component == 'python' && matrix.should-run == 'true'
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        run: |
+          if ! command -v uv >/dev/null 2>&1; then
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+          else
+            echo "✅ uv already installed (from cache)"
+          fi
       
       - name: Copy README for Python tests
         if: matrix.component == 'python' && matrix.should-run == 'true'
@@ -177,6 +206,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: bindings/typescript/pnpm-lock.yaml
       
       - name: Install pnpm
         if: matrix.component == 'typescript' && matrix.should-run == 'true'
@@ -204,6 +235,19 @@ jobs:
       
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
+      
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
       
       - name: Install WASM target
         run: |
@@ -237,14 +281,30 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+          cache: 'pip'
+      
+      - name: Cache uv
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/uv
+          key: ${{ runner.os }}-uv-latest
+          restore-keys: |
+            ${{ runner.os }}-uv-
       
       - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        run: |
+          if ! command -v uv >/dev/null 2>&1; then
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+          else
+            echo "✅ uv already installed (from cache)"
+          fi
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: bindings/typescript/pnpm-lock.yaml
       
       - name: Install pnpm
         run: npm install -g pnpm
