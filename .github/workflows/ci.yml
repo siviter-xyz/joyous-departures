@@ -223,10 +223,35 @@ jobs:
           source ~/.cargo/env || true
           rustup target add wasm32-unknown-unknown
       
+      - name: Cache cargo binaries
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/wasm-bindgen
+            ~/.cargo/bin/wasm-opt
+          key: ${{ runner.os }}-cargo-binaries-wasm-${{ hashFiles('Cargo.lock') }}-v1
+          restore-keys: |
+            ${{ runner.os }}-cargo-binaries-wasm-
+      
+      - name: Install wasm-bindgen-cli
+        run: |
+          source ~/.cargo/env || true
+          if ! command -v wasm-bindgen >/dev/null 2>&1; then
+            echo "📥 Installing wasm-bindgen-cli..."
+            cargo install wasm-bindgen-cli --version 0.2.106 --quiet
+          else
+            echo "✅ wasm-bindgen-cli already installed (from cache)"
+          fi
+      
       - name: Install wasm-opt
         run: |
           source ~/.cargo/env || true
-          cargo install wasm-opt --version 0.116.1 --quiet
+          if ! command -v wasm-opt >/dev/null 2>&1; then
+            echo "📥 Installing wasm-opt..."
+            cargo install wasm-opt --version 0.116.1 --quiet
+          else
+            echo "✅ wasm-opt already installed (from cache)"
+          fi
       
       - name: Install build tools
         run: |
