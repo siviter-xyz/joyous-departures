@@ -1,7 +1,0 @@
-# Include the Python package directory
-include joyous_departures/**/*.py
-recursive-include joyous_departures *.py
-
-# Include README (copied to this directory before build)
-include README.md
-

@@ -48,8 +48,18 @@ find pkg -name "joy_goodbye_wasm*" -type f -delete 2>/dev/null || true
 echo ""
 echo "🔨 Building TypeScript to ESM and CommonJS with tsdown..."
 
-# tsdown handles ESM/CommonJS shims, sourcemaps, and declarations automatically
-npx tsdown
+# Ensure tsdown is available (should be installed via pnpm install)
+if ! command -v tsdown >/dev/null 2>&1 && [ -f "node_modules/.bin/tsdown" ]; then
+    # Use local tsdown from node_modules
+    npx tsdown
+elif command -v tsdown >/dev/null 2>&1; then
+    # Use global tsdown if available
+    tsdown
+else
+    # Fallback to npx (will install if needed, but slower)
+    echo "⚠️  tsdown not found locally, using npx (may be slower)..."
+    npx tsdown
+fi
 
 echo "✅ TypeScript builds complete"
 

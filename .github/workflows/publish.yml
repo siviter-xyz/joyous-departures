@@ -160,6 +160,11 @@ jobs:
             echo "✅ Version already correct: $CURRENT_VERSION"
           fi
       
+      - name: Install dependencies
+        run: |
+          cd bindings/typescript
+          pnpm install
+      
       - name: Build WASM package
         run: |
           cd bindings/typescript
@@ -238,15 +243,22 @@ jobs:
           # Use the build script which handles proper wheel packaging with RECORD file
           bash scripts/build-wheel.sh
       
+      - name: Install twine
+        run: |
+          cd bindings/python
+          source .venv/bin/activate || true
+          # Install twine for uploading to PyPI
+          uv pip install twine
+      
       - name: Publish to PyPI
         run: |
           cd bindings/python
-          source .venv/bin/activate
+          source .venv/bin/activate || true
           # Maturin builds to workspace root target/wheels/, not bindings/python/target/wheels/
           # Try both locations
-          if [ -f "../../target/wheels/"*.whl ]; then
+          if ls ../../target/wheels/*.whl 1> /dev/null 2>&1; then
             twine upload ../../target/wheels/*.whl
-          elif [ -f "target/wheels/"*.whl ]; then
+          elif ls target/wheels/*.whl 1> /dev/null 2>&1; then
             twine upload target/wheels/*.whl
           else
             echo "❌ ERROR: No wheel files found!"

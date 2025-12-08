@@ -15,9 +15,25 @@ authors = [
     { name = "siviter.xyz" }
 ]
 classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Rust",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Markup",
+]
+
+keywords = [
+    "goodbye",
+    "sign-off",
+    "messages",
+    "email",
+    "templates",
 ]
 
 [project.urls]
@@ -33,4 +49,3 @@ module-name = "joyous_departures._joy_generator"
 python-source = "."
 # Explicitly include the package directory in source distribution
 sdist-include = ["joyous_departures/**/*.py"]
-
