@@ -106,6 +106,12 @@ jobs:
           source ~/.cargo/env || true
           rustup target add wasm32-unknown-unknown
       
+      - name: Install wasm-opt
+        if: matrix.component == 'typescript' && matrix.should-run == 'true'
+        run: |
+          source ~/.cargo/env || true
+          cargo install wasm-opt --quiet
+      
       - name: Install build tools
         if: matrix.should-run == 'true'
         run: |
@@ -167,9 +173,10 @@ jobs:
         run: |
           cd bindings/typescript
           source ~/.cargo/env || true
+          # Install dependencies first (tsdown is needed by build script)
+          pnpm install
           # Use the build script which creates Cloudflare Workers-compatible wrapper
           bash scripts/build-package.sh
-          pnpm install
           pnpm test
 
   build:
