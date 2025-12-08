@@ -8,14 +8,13 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
-  "dependencies": {
-    "@siviter-xyz/joyous-departures": "^1.6.3"
-  },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vitest": "^2.0.0"
+  },
+  "dependencies": {
+    "@siviter-xyz/joyous-departures": "^1.6.4"
   }
 }
-
