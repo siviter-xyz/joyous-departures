@@ -120,6 +120,29 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
       
+      - name: Install WASM target
+        run: |
+          source ~/.cargo/env || true
+          rustup target add wasm32-unknown-unknown
+      
+      - name: Cache wasm-bindgen-cli
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/wasm-bindgen
+          key: ${{ runner.os }}-wasm-bindgen-cli-0.2.106-v1
+          restore-keys: |
+            ${{ runner.os }}-wasm-bindgen-cli-
+      
+      - name: Install wasm-bindgen-cli
+        run: |
+          source ~/.cargo/env || true
+          if ! command -v wasm-bindgen >/dev/null 2>&1; then
+            echo "📥 Installing wasm-bindgen-cli..."
+            cargo install wasm-bindgen-cli --version 0.2.106 --quiet
+          else
+            echo "✅ wasm-bindgen-cli already installed (from cache)"
+          fi
+      
       - name: Install build tools
         run: |
           sudo apt-get update
@@ -133,10 +156,6 @@ jobs:
       
       - name: Install pnpm
         run: npm install -g pnpm
-      
-      - name: Install wasm-pack
-        run: |
-          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       
       - name: Update npm to latest (required for trusted publishing)
         run: npm install -g npm@latest
