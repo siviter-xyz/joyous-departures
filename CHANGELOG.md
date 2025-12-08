@@ -1,3 +1,11 @@
+## [1.6.1](https://github.com/siviter-xyz/joyous-departures/compare/v1.6.0...v1.6.1) (2025-12-08)
+
+
+### Bug Fixes
+
+* **ci:** update Python test to use correct module name ([9e70e20](https://github.com/siviter-xyz/joyous-departures/commit/9e70e20074342c797f88af79ed4723ca28f76d01))
+* modernize Python packaging and fix CI pipeline failures ([add7344](https://github.com/siviter-xyz/joyous-departures/commit/add734488cd08db8ea5ce3c3868034d202cf4dd0))
+
 # [1.6.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.5.2...v1.6.0) (2025-12-08)
 
 
