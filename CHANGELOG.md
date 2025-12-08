@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/siviter-xyz/joyous-departures/compare/v1.6.3...v1.6.4) (2025-12-08)
+
+
+### Bug Fixes
+
+* Fix WASM import error by removing default import and using top-level await ([ebd3443](https://github.com/siviter-xyz/joyous-departures/commit/ebd344382a65d4b610c818a7c5e1fe97c3fa24b2))
+
 ## [1.6.3](https://github.com/siviter-xyz/joyous-departures/compare/v1.6.2...v1.6.3) (2025-12-08)
 
 
