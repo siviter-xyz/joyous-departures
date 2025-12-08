@@ -118,13 +118,15 @@ WRAPPER_EOF
 echo "✅ Created Cloudflare Workers-compatible wrapper (no patching needed!)"
 
 # Optimize WASM binary with wasm-opt (if available)
-# wasm-opt is part of binaryen, install via: cargo install wasm-opt
+# wasm-opt is a binary tool (part of binaryen), not a library dependency
+# Install via: cargo install wasm-opt --version 0.116.1
+# Note: wasm-opt is optional but recommended for smaller binary sizes
 if command -v wasm-opt >/dev/null 2>&1; then
     echo "⚡ Optimizing WASM binary with wasm-opt..."
     wasm-opt -Os pkg/joy_generator_wasm_bg.wasm -o pkg/joy_generator_wasm_bg.wasm
 else
     echo "ℹ️  wasm-opt not found, skipping optimization"
-    echo "   Install with: cargo install wasm-opt"
+    echo "   Install with: cargo install wasm-opt --version 0.116.1"
     echo "   Note: wasm-opt is optional but recommended for smaller binary sizes"
 fi
 

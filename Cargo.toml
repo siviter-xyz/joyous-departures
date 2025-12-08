@@ -26,3 +26,8 @@ maturin = "1.7"
 # TypeScript/WASM bindings
 wasm-bindgen = "0.2"
 
+# Build tools (binary tools, not library dependencies):
+# - wasm-bindgen-cli: Install via `cargo install wasm-bindgen-cli --version 0.2.106`
+# - wasm-opt: Install via `cargo install wasm-opt --version 0.116.1`
+# These are documented here for version tracking but installed via cargo install
+

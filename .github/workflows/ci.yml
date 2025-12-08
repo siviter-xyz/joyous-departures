@@ -110,7 +110,7 @@ jobs:
         if: matrix.component == 'typescript' && matrix.should-run == 'true'
         run: |
           source ~/.cargo/env || true
-          cargo install wasm-opt --quiet
+          cargo install wasm-opt --version 0.116.1 --quiet
       
       - name: Install build tools
         if: matrix.should-run == 'true'
@@ -199,7 +199,7 @@ jobs:
       - name: Install wasm-opt
         run: |
           source ~/.cargo/env || true
-          cargo install wasm-opt --quiet
+          cargo install wasm-opt --version 0.116.1 --quiet
       
       - name: Install build tools
         run: |
