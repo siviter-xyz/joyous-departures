@@ -44,6 +44,15 @@ fi
 echo "🧹 Cleaning up old WASM files..."
 find pkg -name "joy_goodbye_wasm*" -type f -delete 2>/dev/null || true
 
+# Build TypeScript to both ESM and CommonJS using tsdown
+echo ""
+echo "🔨 Building TypeScript to ESM and CommonJS with tsdown..."
+
+# tsdown handles ESM/CommonJS shims, sourcemaps, and declarations automatically
+npx tsdown
+
+echo "✅ TypeScript builds complete"
+
 # Copy README from repo root
 if [ ! -f "README.md" ]; then
     echo "📄 Copying README..."

@@ -10,9 +10,13 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { readFileSync } from "fs";
 
-// Get __dirname equivalent for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// Get directory name - tsdown shims handle __dirname and import.meta.url automatically
+// In ESM: import.meta.url is available (tsdown shims it)
+// In CommonJS: __dirname is available (tsdown shims it)
+const currentDir =
+  typeof __dirname !== "undefined"
+    ? __dirname
+    : dirname(fileURLToPath(import.meta.url));
 
 // Initialize WASM module (call once)
 let wasmInitialized = false;
@@ -34,7 +38,7 @@ async function ensureWasmInitialized(): Promise<void> {
 
     // For Node.js, load WASM file directly
     if (typeof process !== "undefined" && process.versions?.node) {
-      const wasmPath = join(__dirname, "../pkg/joy_generator_wasm_bg.wasm");
+      const wasmPath = join(currentDir, "../pkg/joy_generator_wasm_bg.wasm");
       const nodeBuffer = readFileSync(wasmPath);
       // Convert Node.js Buffer to ArrayBuffer
       wasmBuffer = nodeBuffer.buffer.slice(
@@ -45,10 +49,8 @@ async function ensureWasmInitialized(): Promise<void> {
       // For browser/Cloudflare Workers: fetch WASM and convert to ArrayBuffer
       // This ensures we use WebAssembly.instantiate() only (Cloudflare-compatible)
       // Never pass URL/Response directly - always convert to ArrayBuffer first
-      const wasmUrl = new URL(
-        "../pkg/joy_generator_wasm_bg.wasm",
-        import.meta.url,
-      );
+      // tsdown shims make import.meta.url available in both ESM and CommonJS
+      const wasmUrl = new URL("../pkg/joy_generator_wasm_bg.wasm", import.meta.url);
       const wasmResponse = await fetch(wasmUrl);
       wasmBuffer = await wasmResponse.arrayBuffer();
     }
