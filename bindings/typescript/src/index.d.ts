@@ -43,4 +43,3 @@ export interface GoodbyeOptions {
  * ```
  */
 export function generateGoodbye(options?: GoodbyeOptions): Promise<string>;
-

@@ -13,8 +13,7 @@
   },
   "files": [
     "pkg",
-    "src",
-    "README.md"
+    "src"
   ],
   "readme": "README.md",
   "keywords": [

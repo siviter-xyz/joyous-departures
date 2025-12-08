@@ -19,20 +19,43 @@ let wasmInitialized = false;
 
 /**
  * Initialize WASM module (call once)
- * Handles both Node.js (direct file read) and browser (fetch) environments
+ * Handles Node.js, browser, and Cloudflare Workers environments
+ *
+ * Cloudflare Workers restrictions:
+ * - Only WebAssembly.instantiate() with pre-compiled module (ArrayBuffer) is allowed
+ * - compile(), compileStreaming(), instantiateStreaming() are NOT allowed
+ *
+ * Solution: Always load WASM as ArrayBuffer first, then pass to init()
+ * This ensures wasm-pack uses WebAssembly.instantiate() only
  */
 async function ensureWasmInitialized(): Promise<void> {
   if (!wasmInitialized) {
+    let wasmBuffer: ArrayBuffer;
+
     // For Node.js, load WASM file directly
-    // pkg directory is at package root, so from src/ we need ../pkg/
     if (typeof process !== "undefined" && process.versions?.node) {
       const wasmPath = join(__dirname, "../pkg/joy_generator_wasm_bg.wasm");
-      const wasmBuffer = readFileSync(wasmPath);
-      await init({ module_or_path: wasmBuffer } as InitInput);
+      const nodeBuffer = readFileSync(wasmPath);
+      // Convert Node.js Buffer to ArrayBuffer
+      wasmBuffer = nodeBuffer.buffer.slice(
+        nodeBuffer.byteOffset,
+        nodeBuffer.byteOffset + nodeBuffer.byteLength,
+      );
     } else {
-      // For browser, use default init (with fetch)
-      await init();
+      // For browser/Cloudflare Workers: fetch WASM and convert to ArrayBuffer
+      // This ensures we use WebAssembly.instantiate() only (Cloudflare-compatible)
+      // Never pass URL/Response directly - always convert to ArrayBuffer first
+      const wasmUrl = new URL(
+        "../pkg/joy_generator_wasm_bg.wasm",
+        import.meta.url,
+      );
+      const wasmResponse = await fetch(wasmUrl);
+      wasmBuffer = await wasmResponse.arrayBuffer();
     }
+
+    // Pass ArrayBuffer directly - wasm-pack will use WebAssembly.instantiate()
+    // (not instantiateStreaming, which is blocked in Cloudflare Workers)
+    await init({ module_or_path: wasmBuffer } as InitInput);
     wasmInitialized = true;
   }
 }
@@ -95,8 +118,14 @@ export async function generateGoodbye(
     if (options.templateArgs.name && options.templateArgs.name.length > 50) {
       options.templateArgs.name = options.templateArgs.name.substring(0, 50);
     }
-    if (options.templateArgs.location && options.templateArgs.location.length > 100) {
-      options.templateArgs.location = options.templateArgs.location.substring(0, 100);
+    if (
+      options.templateArgs.location &&
+      options.templateArgs.location.length > 100
+    ) {
+      options.templateArgs.location = options.templateArgs.location.substring(
+        0,
+        100,
+      );
     }
     if (options.templateArgs.date && options.templateArgs.date.length > 20) {
       options.templateArgs.date = options.templateArgs.date.substring(0, 20);
