@@ -146,12 +146,14 @@ Based on plan.md structure:
   - Configure wasm-pack in Cargo.toml
   - Create WASM-compatible wrapper
   - Build script for WASM compilation
+  - Cloudflare Workers compatibility (uses WebAssembly.instantiate only)
 
 - [x] T026 [US1] Implement TypeScript wrapper in `bindings/typescript/src/index.ts`
   - Import WASM module
   - Wrap generate_goodbye function
   - Convert TypeScript options to CoreGoodbyeOptions
   - Error handling
+  - Cloudflare Workers compatible initialization (always uses ArrayBuffer)
 
 - [x] T027 [US1] Create TypeScript type definitions in `bindings/typescript/src/index.d.ts`
   - GoodbyeOptions interface
@@ -262,11 +264,15 @@ Based on plan.md structure:
   - Quickstart guide validation
   - Benchmark results in README
 
-- [ ] T043 [P] Code cleanup and refactoring
+- [x] T043 [P] Code cleanup and refactoring
   - Review all code for consistency
   - Remove unused code
   - Optimize imports
   - Format code (cargo fmt, prettier, black)
+  - ✅ Removed manual wheel injection hack - using maturin's native mixed project support
+  - ✅ Fixed Python package structure (joyous_departures._joy_generator)
+  - ✅ Added Cloudflare Workers compatibility for TypeScript/WASM
+  - ✅ Created proper build scripts (build-wheel.sh, build-package.sh)
 
 - [ ] T044 [P] Security review
   - Validate all inputs

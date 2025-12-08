@@ -1,6 +1,5 @@
 """E2E tests for joyous-departures Python bindings"""
 
-import asyncio
 import pytest
 from joyous_departures import generate_goodbye
 
@@ -19,11 +18,11 @@ async def test_basic_generate_goodbye():
 async def test_randomness_verification():
     """Test that each call produces different results (when corpus has multiple messages)"""
     results = [await generate_goodbye() for _ in range(10)]
-    
+
     # All should be non-empty
     assert all(len(r) > 0 for r in results)
     assert len(results) == 10
-    
+
     # With fallback corpus (1 message), all will be same
     # In Phase 5 with 360 messages, we should see different results
     # For now, just verify structure
@@ -58,11 +57,11 @@ async def test_use_emojis_false():
     """Test emoji stripping"""
     result_with_emojis = await generate_goodbye(use_emojis=True)
     result_without_emojis = await generate_goodbye(use_emojis=False)
-    
+
     # Both should be valid
     assert isinstance(result_with_emojis, str)
     assert isinstance(result_without_emojis, str)
-    
+
     # Without emojis should not contain common emojis (basic check)
     # Note: More thorough emoji detection would be needed
 
@@ -80,12 +79,12 @@ async def test_long_name_truncation():
 async def test_benchmark_performance():
     """Benchmark generation speed (target: <10ms)"""
     import time
+
     start = time.time()
     result = await generate_goodbye()
     elapsed = (time.time() - start) * 1000  # Convert to milliseconds
-    
+
     assert isinstance(result, str)
     assert len(result) > 0
     # Should be fast (<10ms target, but allow some margin for first call)
     assert elapsed < 100  # 100ms is reasonable for first call with initialization
-
