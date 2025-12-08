@@ -164,11 +164,8 @@ jobs:
         run: |
           cd bindings/typescript
           source ~/.cargo/env || true
-          wasm-pack build --target web --out-dir pkg --release
-          # Remove pkg/.gitignore (contains '*' which excludes all files from npm package)
-          rm -f pkg/.gitignore
-          # Copy README from repo root to package directory for npm
-          cp ../../README.md README.md
+          # Use the build script which handles proper package building
+          bash scripts/build-package.sh
           # Verify pkg directory exists and contains required files
           echo "📦 Verifying pkg directory contents:"
           ls -la pkg/ || echo "❌ pkg directory not found!"
@@ -238,26 +235,8 @@ jobs:
         run: |
           cd bindings/python
           source ~/.cargo/env || true
-          uv venv --python 3.13
-          source .venv/bin/activate
-          uv pip install maturin twine
-          # Copy README to package directory so maturin can find it
-          # The readme path in pyproject.toml is relative to pyproject.toml location
-          cp ../../README.md README.md
-          maturin build --release
-          # Maturin builds to target/wheels/ relative to workspace root (not bindings/python/target/wheels/)
-          # Verify wheel was created
-          echo "📦 Checking for built wheels:"
-          ls -lh ../../target/wheels/*.whl || echo "⚠️ No wheel found in ../../target/wheels/"
-          ls -lh target/wheels/*.whl || echo "⚠️ No wheel found in target/wheels/"
-          
-          # Fix: python-source doesn't work when package name doesn't match module name
-          # Manually inject the joyous_departures package into the wheel
-          WHEEL=$(ls -t ../../target/wheels/*.whl 2>/dev/null | head -1 || ls -t target/wheels/*.whl 2>/dev/null | head -1)
-          if [ -n "$WHEEL" ]; then
-            echo "📦 Injecting joyous_departures package into wheel..."
-            python3 -c "import zipfile, os, sys; wheel_path = sys.argv[1]; package_dir = 'joyous_departures'; z = zipfile.ZipFile(wheel_path, 'a'); [z.write(os.path.join(root, file), os.path.join(root, file)) for root, dirs, files in os.walk(package_dir) for file in files if file.endswith('.py')]; z.close(); print(f'✅ Package injected into {wheel_path}')" "$WHEEL"
-          fi
+          # Use the build script which handles proper wheel packaging with RECORD file
+          bash scripts/build-wheel.sh
       
       - name: Publish to PyPI
         run: |
