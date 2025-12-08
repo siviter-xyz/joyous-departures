@@ -1,3 +1,18 @@
+## [1.6.3](https://github.com/siviter-xyz/joyous-departures/compare/v1.6.2...v1.6.3) (2025-12-08)
+
+
+### Bug Fixes
+
+* Add required packages field to pnpm-workspace.yaml ([7f9587d](https://github.com/siviter-xyz/joyous-departures/commit/7f9587d0e768464b239ce2752a2c3ac426cdb286))
+* Remove incorrect pip cache configuration ([b56343a](https://github.com/siviter-xyz/joyous-departures/commit/b56343a32edbe1d90c0276e0aabb9621a7affb03))
+* Update publish workflow to use build script and add WASM target ([88cd525](https://github.com/siviter-xyz/joyous-departures/commit/88cd5250ef9d97146bf1eccea2d16f1ba28be123))
+* Use pnpm/action-setup for proper pnpm installation and caching ([cd9019a](https://github.com/siviter-xyz/joyous-departures/commit/cd9019a9e56ab9495368462d8d5bdb1b94e31039))
+
+
+### Performance Improvements
+
+* Add comprehensive caching across all workflows ([2926097](https://github.com/siviter-xyz/joyous-departures/commit/29260976259706b4a2da3ddd57c3782996bbe503))
+
 ## [1.6.2](https://github.com/siviter-xyz/joyous-departures/compare/v1.6.1...v1.6.2) (2025-12-08)
 
 
