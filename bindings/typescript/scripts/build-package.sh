@@ -40,6 +40,12 @@ if [ -f "pkg/.gitignore" ]; then
     rm -f pkg/.gitignore
 fi
 
+# Remove pkg/README.md (wasm-pack generates this, but we use the root README.md instead)
+if [ -f "pkg/README.md" ]; then
+    echo "🗑️  Removing pkg/README.md (using root README.md instead)..."
+    rm -f pkg/README.md
+fi
+
 # Remove any old/stale WASM files (from previous builds with different names)
 echo "🧹 Cleaning up old WASM files..."
 find pkg -name "joy_goodbye_wasm*" -type f -delete 2>/dev/null || true
