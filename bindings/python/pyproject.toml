@@ -26,9 +26,10 @@ Repository = "https://github.com/siviter-xyz/joyous-departures"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
-module-name = "joy_generator"
-# Include the Python package directory (joyous_departures) in both wheels and sdists
-# The extension module is joy_generator (Rust), but the Python package is joyous_departures
+# The Rust extension module is joy_generator, but we want it as a submodule of joyous_departures
+# This creates joyous_departures._joy_generator as the extension module
+module-name = "joyous_departures._joy_generator"
+# Python source is in the current directory (joyous_departures package)
 python-source = "."
 # Explicitly include the package directory in source distribution
 sdist-include = ["joyous_departures/**/*.py"]

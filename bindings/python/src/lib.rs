@@ -148,8 +148,9 @@ fn is_valid_timezone(tz: &str) -> bool {
 }
 
 /// Python module definition
+/// Note: Module name must match the submodule path: joyous_departures._joy_generator
 #[pymodule]
-fn joy_generator(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn _joy_generator(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(generate_goodbye, m)?)?;
     m.add("__version__", "0.1.0")?;
     Ok(())
