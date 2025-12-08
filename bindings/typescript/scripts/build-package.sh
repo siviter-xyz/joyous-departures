@@ -40,6 +40,10 @@ if [ -f "pkg/.gitignore" ]; then
     rm -f pkg/.gitignore
 fi
 
+# Remove any old/stale WASM files (from previous builds with different names)
+echo "🧹 Cleaning up old WASM files..."
+find pkg -name "joy_goodbye_wasm*" -type f -delete 2>/dev/null || true
+
 # Copy README from repo root
 if [ ! -f "README.md" ]; then
     echo "📄 Copying README..."
