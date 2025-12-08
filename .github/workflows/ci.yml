@@ -100,6 +100,12 @@ jobs:
         with:
           components: rustfmt, clippy
       
+      - name: Install WASM target
+        if: matrix.component == 'typescript' && matrix.should-run == 'true'
+        run: |
+          source ~/.cargo/env || true
+          rustup target add wasm32-unknown-unknown
+      
       - name: Install build tools
         if: matrix.should-run == 'true'
         run: |
