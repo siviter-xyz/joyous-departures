@@ -1,66 +1,13 @@
 // Import WASM module with proper types
-// wasm-pack automatically generates TypeScript definitions (.d.ts files)
-// The types are available at build time from the generated package
-// pkg directory is at package root, so from src/ we need ../pkg/
-import type { InitInput } from "../pkg/joy_generator_wasm.js";
-import init, {
+// The pkg/joy_generator_wasm.js is a Cloudflare Workers-compatible wrapper
+// that uses wasm-bindgen --target bundler with __wbg_set_wasm
+// Based on: https://developers.cloudflare.com/workers/languages/rust/#javascript-plumbing-wasm-bindgen
+// and https://github.com/wg/cf-worker-wasm
+// 
+// The wrapper file handles initialization automatically - no manual init() call needed!
+import {
   generate_goodbye as wasm_generate_goodbye,
 } from "../pkg/joy_generator_wasm.js";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-// Get directory name - tsdown shims handle __dirname and import.meta.url automatically
-// In ESM: import.meta.url is available (tsdown shims it)
-// In CommonJS: __dirname is available (tsdown shims it)
-const currentDir =
-  typeof __dirname !== "undefined"
-    ? __dirname
-    : dirname(fileURLToPath(import.meta.url));
-
-// Initialize WASM module (call once)
-let wasmInitialized = false;
-
-/**
- * Initialize WASM module (call once)
- * Handles Node.js, browser, and Cloudflare Workers environments
- *
- * Cloudflare Workers restrictions:
- * - Only WebAssembly.instantiate() with pre-compiled module (ArrayBuffer) is allowed
- * - compile(), compileStreaming(), instantiateStreaming() are NOT allowed
- *
- * Solution: Always load WASM as ArrayBuffer first, then pass to init()
- * This ensures wasm-pack uses WebAssembly.instantiate() only
- */
-async function ensureWasmInitialized(): Promise<void> {
-  if (!wasmInitialized) {
-    let wasmBuffer: ArrayBuffer;
-
-    // For Node.js, load WASM file directly
-    if (typeof process !== "undefined" && process.versions?.node) {
-      const wasmPath = join(currentDir, "../pkg/joy_generator_wasm_bg.wasm");
-      const nodeBuffer = readFileSync(wasmPath);
-      // Convert Node.js Buffer to ArrayBuffer
-      wasmBuffer = nodeBuffer.buffer.slice(
-        nodeBuffer.byteOffset,
-        nodeBuffer.byteOffset + nodeBuffer.byteLength,
-      );
-    } else {
-      // For browser/Cloudflare Workers: fetch WASM and convert to ArrayBuffer
-      // This ensures we use WebAssembly.instantiate() only (Cloudflare-compatible)
-      // Never pass URL/Response directly - always convert to ArrayBuffer first
-      // tsdown shims make import.meta.url available in both ESM and CommonJS
-      const wasmUrl = new URL("../pkg/joy_generator_wasm_bg.wasm", import.meta.url);
-      const wasmResponse = await fetch(wasmUrl);
-      wasmBuffer = await wasmResponse.arrayBuffer();
-    }
-
-    // Pass ArrayBuffer directly - wasm-pack will use WebAssembly.instantiate()
-    // (not instantiateStreaming, which is blocked in Cloudflare Workers)
-    await init({ module_or_path: wasmBuffer } as InitInput);
-    wasmInitialized = true;
-  }
-}
 
 export interface GoodbyeTemplateArgs {
   name?: string;
@@ -93,7 +40,7 @@ export interface GoodbyeOptions {
 export async function generateGoodbye(
   options: GoodbyeOptions = {},
 ): Promise<string> {
-  await ensureWasmInitialized();
+  // WASM is initialized by the wrapper file at import time
 
   // Validate and prepare options
   const languageCode = options.language_code || "en-GB";

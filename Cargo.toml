@@ -25,5 +25,4 @@ maturin = "1.7"
 
 # TypeScript/WASM bindings
 wasm-bindgen = "0.2"
-wasm-pack = "0.13"
 

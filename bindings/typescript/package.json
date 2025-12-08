@@ -47,8 +47,8 @@
     "tsdown": "^0.17.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "vitest": "^2.0.0",
-    "wasm-pack": "^0.13.0"
+    "vite-plugin-wasm": "^3.2.2",
+    "vitest": "^2.0.0"
   },
   "scripts": {
     "build": "bash scripts/build-package.sh",
