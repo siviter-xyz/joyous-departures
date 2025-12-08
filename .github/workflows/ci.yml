@@ -141,7 +141,7 @@ jobs:
           # The python-source = "." in pyproject.toml should include the joyous_departures/ directory
           maturin develop
           # Verify installation - check both extension module and Python package
-          python -c "import joy_generator; print('✅ Rust extension module found')"
+          python -c "import joyous_departures._joy_generator; print('✅ Rust extension module found')"
           python -c "import joyous_departures; print('✅ Python package importable')" || (echo "❌ Package not importable. Debugging..."; pip list | grep joyous; pip show joyous-departures; find .venv/lib/python3.13/site-packages/ -name "*joyous*" 2>/dev/null || echo "No joyous files in site-packages"; python -c "import sys; print('Python path:', sys.path)"; exit 1)
           # Run tests - add current directory to PYTHONPATH to ensure package is found
           PYTHONPATH=. pytest tests/ -v
