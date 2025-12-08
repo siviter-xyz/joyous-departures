@@ -1,6 +1,6 @@
 {
   "name": "@siviter-xyz/joyous-departures",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Generate warm, heartfelt goodbye messages for email templates",
   "type": "module",
   "main": "./dist/index.cjs",

@@ -1,3 +1,25 @@
+## [1.6.2](https://github.com/siviter-xyz/joyous-departures/compare/v1.6.1...v1.6.2) (2025-12-08)
+
+
+### Bug Fixes
+
+* Add wasm-opt installation to build job as well ([cfbc7e1](https://github.com/siviter-xyz/joyous-departures/commit/cfbc7e1e16867c372c2c65f66cb67af5920e6f53))
+* Add wasm32-unknown-unknown target installation to CI ([6778b5e](https://github.com/siviter-xyz/joyous-departures/commit/6778b5e32f683fa9992be5d212d58d5c288d4eee))
+* Add wasm32-unknown-unknown target to build job as well ([de46cdc](https://github.com/siviter-xyz/joyous-departures/commit/de46cdc8b9f3162a3736f1a974c12b7d07dcfad7))
+* Also install dependencies before build in build job ([d815710](https://github.com/siviter-xyz/joyous-departures/commit/d815710e5b3d1130eb19d31bfb1beb4b690595bd))
+* Install dependencies before build script and add wasm-opt to CI ([72ac0f7](https://github.com/siviter-xyz/joyous-departures/commit/72ac0f74e0d071f6ad09368ed0bd025b125abc3f))
+* **typescript:** remove duplicate README.md from pkg directory ([449f0b8](https://github.com/siviter-xyz/joyous-departures/commit/449f0b88279a48d71b7f520d3b02415f27a091c5))
+* Update CI workflow to use build-package.sh instead of wasm-pack ([ee04f2b](https://github.com/siviter-xyz/joyous-departures/commit/ee04f2b592a77daa16eb808159d6a9c3724835ee))
+* Update pnpm-lock.yaml after removing wasm-pack dependency ([85260dd](https://github.com/siviter-xyz/joyous-departures/commit/85260dd824c134cf1d85773c7e1af8bc2eb8ddbe))
+
+
+### Performance Improvements
+
+* Add caching for cargo binaries in build job as well ([4b3ca3d](https://github.com/siviter-xyz/joyous-departures/commit/4b3ca3d178bf6c654bf1fa252e4c062d69408002))
+* Add caching for wasm-bindgen-cli and wasm-opt in CI ([d24a154](https://github.com/siviter-xyz/joyous-departures/commit/d24a154cf833f9c44c499d57050da86876630c0c))
+* Disable wasm-opt installation in CI (takes too long) ([6f29a22](https://github.com/siviter-xyz/joyous-departures/commit/6f29a22eb8f698bf41011f3756054979972733fa))
+* Remove wasm-opt from build job as well ([60f0991](https://github.com/siviter-xyz/joyous-departures/commit/60f0991d7c879988ce82ec3fc66a830494ab49c1))
+
 ## [1.6.1](https://github.com/siviter-xyz/joyous-departures/compare/v1.6.0...v1.6.1) (2025-12-08)
 
 
