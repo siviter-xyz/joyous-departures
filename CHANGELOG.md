@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.6.4...v1.7.0) (2025-12-23)
+
+
+### Features
+
+* bump to new version ([cbeeef7](https://github.com/siviter-xyz/joyous-departures/commit/cbeeef73f179fcd66caba871cdc23a6be87791cf))
+
 ## [1.6.4](https://github.com/siviter-xyz/joyous-departures/compare/v1.6.3...v1.6.4) (2025-12-08)
 
 
