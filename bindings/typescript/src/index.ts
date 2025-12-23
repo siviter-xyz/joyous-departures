@@ -1,12 +1,13 @@
 // Import WASM module with proper types
 // The pkg/joy_generator_wasm.js is a Cloudflare Workers-compatible wrapper
-// that uses wasm-bindgen --target bundler with __wbg_set_wasm
+// that uses wasm-bindgen --target bundler with __wbg_set_wasm and an explicit
+// async initWasm() helper.
 // Based on: https://developers.cloudflare.com/workers/languages/rust/#javascript-plumbing-wasm-bindgen
 // and https://github.com/wg/cf-worker-wasm
 // 
-// The wrapper file handles initialization automatically - no manual init() call needed!
 import {
   generate_goodbye as wasm_generate_goodbye,
+  initWasm,
 } from "../pkg/joy_generator_wasm.js";
 
 export interface GoodbyeTemplateArgs {
@@ -40,7 +41,8 @@ export interface GoodbyeOptions {
 export async function generateGoodbye(
   options: GoodbyeOptions = {},
 ): Promise<string> {
-  // WASM is initialized by the wrapper file at import time
+  // Ensure WASM module is initialized before calling into Rust.
+  await initWasm();
 
   // Validate and prepare options
   const languageCode = options.language_code || "en-GB";

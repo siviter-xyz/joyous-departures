@@ -66,7 +66,7 @@ fi
 
 # Generate bindings with wasm-bindgen using --target bundler
 # The bundler target generates __wbg_set_wasm which allows proper Cloudflare Workers support
-# via a wrapper file (no patching needed!)
+# via a wrapper file
 echo "🔨 Generating WASM bindings with wasm-bindgen (target: bundler)..."
 cd "$BINDING_DIR"
 mkdir -p pkg
@@ -76,60 +76,83 @@ $WASM_BINDGEN_CMD \
     --out-name joy_generator_wasm \
     "$WASM_FILE"
 
-# Create Cloudflare Workers-compatible wrapper file
-# Based on: https://developers.cloudflare.com/workers/languages/rust/#javascript-plumbing-wasm-bindgen
-# and https://github.com/wg/cf-worker-wasm
-# 
-# The bundler target generates __wbg_set_wasm, which we use in the wrapper
-# This follows the established Cloudflare pattern - no patching needed!
+# Create Cloudflare Workers-compatible wrapper file with explicit initWasm helper
 echo "📝 Creating Cloudflare Workers-compatible wrapper..."
 cat > pkg/joy_generator_wasm.js << 'WRAPPER_EOF'
 // Cloudflare Workers compatibility wrapper
 // Based on: https://developers.cloudflare.com/workers/languages/rust/#javascript-plumbing-wasm-bindgen
 // and https://github.com/wg/cf-worker-wasm
-// 
+//
 // This wrapper handles WebAssembly.Module (Workers) vs raw module (Node.js/bundlers)
 // Uses wasm-bindgen --target bundler which provides __wbg_set_wasm
 
 import * as imports from "./joy_generator_wasm_bg.js";
 
-// Initialize WASM module - must complete before exports are used
-// Use top-level await to ensure initialization completes
-const initPromise = (async () => {
-  if (typeof process !== "undefined" && process.release?.name === "node") {
-    // Node.js environment - read WASM file and instantiate
-    const fs = await import("fs");
-    const path = await import("path");
-    const { fileURLToPath } = await import("url");
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-    const wasmPath = path.join(__dirname, "joy_generator_wasm_bg.wasm");
-    const wasmBuffer = fs.readFileSync(wasmPath);
-    const wasmModule = await WebAssembly.instantiate(wasmBuffer, {
-      "./joy_generator_wasm_bg.js": imports,
-    });
-    imports.__wbg_set_wasm(wasmModule.instance.exports);
-  } else {
-    // Cloudflare Workers environment - initialize asynchronously
-    // Workers allows WebAssembly.instantiate with buffer
-    const wasmUrl = new URL("./joy_generator_wasm_bg.wasm", import.meta.url);
-    const response = await fetch(wasmUrl);
-    const wasmBuffer = await response.arrayBuffer();
-    const wasmModule = await WebAssembly.instantiate(wasmBuffer, {
-      "./joy_generator_wasm_bg.js": imports,
-    });
-    imports.__wbg_set_wasm(wasmModule.instance.exports);
-  }
-})();
+let initPromise;
 
-// Wait for initialization to complete
-await initPromise;
+/**
+ * Initialize the underlying WASM module.
+ *
+ * Safe to call multiple times; initialization only runs once and
+ * subsequent calls await the same Promise.
+ */
+export function initWasm() {
+  if (!initPromise) {
+    initPromise = (async () => {
+      if (typeof process !== "undefined" && process.release?.name === "node") {
+        // Node.js environment - read WASM file from disk and instantiate
+        const fs = await import("fs");
+        const path = await import("path");
+        const { fileURLToPath } = await import("url");
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        const wasmPath = path.join(__dirname, "joy_generator_wasm_bg.wasm");
+        const wasmBuffer = fs.readFileSync(wasmPath);
+        const wasmInstance = await WebAssembly.instantiate(wasmBuffer, {
+          "./joy_generator_wasm_bg.js": imports,
+        });
+        imports.__wbg_set_wasm(wasmInstance.instance.exports);
+      } else {
+        // Cloudflare Workers / other runtimes - load via fetch/import.meta.url
+        const wasmUrl = new URL("./joy_generator_wasm_bg.wasm", import.meta.url);
+        const response = await fetch(wasmUrl);
+        const wasmBuffer = await response.arrayBuffer();
+        const wasmInstance = await WebAssembly.instantiate(wasmBuffer, {
+          "./joy_generator_wasm_bg.js": imports,
+        });
+        imports.__wbg_set_wasm(wasmInstance.instance.exports);
+      }
+    })();
+  }
+  return initPromise;
+}
+
+// Eagerly start initialization; callers (especially Workers) should still
+// explicitly await initWasm() before invoking any exported functions.
+initWasm().catch((err) => {
+  console.error("Failed to initialize joy_generator_wasm", err);
+});
 
 // Re-export everything from the generated bindings
 export * from "./joy_generator_wasm_bg.js";
 WRAPPER_EOF
 
-echo "✅ Created Cloudflare Workers-compatible wrapper (no patching needed!)"
+echo "✅ Created Cloudflare Workers-compatible wrapper with initWasm() helper"
+
+echo "📝 Generating TypeScript definitions for wrapper..."
+cat > pkg/joy_generator_wasm.d.ts << 'WRAPPER_TYPES'
+/* tslint:disable */
+/* eslint-disable */
+
+export function generate_goodbye(
+  language_code: string,
+  template_args_json: string,
+  use_emojis: boolean,
+  timezone: string,
+): string;
+
+export function initWasm(): Promise<void>;
+WRAPPER_TYPES
 
 # Optimize WASM binary with wasm-opt (if available)
 # wasm-opt is a binary tool (part of binaryen), not a library dependency
@@ -216,46 +239,9 @@ if [ $MISSING -eq 1 ]; then
     exit 1
 fi
 
-# Check package.json version matches
-PKG_VERSION=$(grep -E '"version"' pkg/package.json | head -1 | sed -E 's/.*"version"\s*:\s*"([^"]+)".*/\1/')
-if [ "$PKG_VERSION" != "$VERSION" ]; then
-    echo "⚠️  Warning: pkg/package.json version ($PKG_VERSION) doesn't match expected version ($VERSION)"
-    echo "   Updating pkg/package.json version..."
-    # Update version in pkg/package.json (requires node/jq or sed)
-    if command -v node >/dev/null 2>&1; then
-        node -e "const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('pkg/package.json')); pkg.version = '$VERSION'; fs.writeFileSync('pkg/package.json', JSON.stringify(pkg, null, 2) + '\n');"
-    else
-        echo "   ⚠️  Could not update version automatically (node not found)"
-    fi
-fi
-
-# Verify package only includes required files (no superfluous files)
-echo ""
-echo "🔍 Verifying package contents (Cloudflare Workers compatible)..."
-echo "   Required files for Cloudflare Workers:"
-echo "   - joy_generator_wasm_bg.wasm (pre-compiled WASM module)"
-echo "   - joy_generator_wasm_bg.js (wasm-bindgen generated bindings with __wbg_set_wasm)"
-echo "   - joy_generator_wasm.js (Cloudflare Workers-compatible wrapper)"
-echo "   - joy_generator_wasm.d.ts (TypeScript definitions)"
-echo "   - package.json (package metadata)"
-
-# Verify wrapper file uses __wbg_set_wasm (Cloudflare Workers pattern)
-if grep -q "__wbg_set_wasm" pkg/joy_generator_wasm.js; then
-    echo "   ✓ Wrapper uses __wbg_set_wasm (Cloudflare Workers compatible)"
-else
-    echo "   ⚠️  Warning: Wrapper file may not be correctly configured"
-fi
-
-# Check that the generated JS does not use restricted methods
-if grep -q "WebAssembly.instantiateStreaming\|WebAssembly.compileStreaming" pkg/joy_generator_wasm_bg.js; then
-    echo "   ⚠️  Note: Generated bindings may contain streaming methods (handled by wrapper)"
-else
-    echo "   ✓ Generated bindings do not use restricted streaming methods"
-fi
-
 echo ""
 echo "✅ TypeScript/WASM package built successfully"
 echo "📦 Version: $VERSION"
 echo "📁 Package directory: $BINDING_DIR/pkg"
-echo "🌐 Cloudflare Workers compatible: ✓ (uses WebAssembly.instantiate only)"
+
 
