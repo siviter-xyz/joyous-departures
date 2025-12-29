@@ -11,9 +11,9 @@ jobs:
     name: Detect changed components
     runs-on: ubuntu-latest
     outputs:
-      rust: ${{ steps.filter.outputs.rust }}
       python: ${{ steps.filter.outputs.python }}
       typescript: ${{ steps.filter.outputs.typescript }}
+      corpus: ${{ steps.filter.outputs.corpus }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,288 +24,131 @@ jobs:
         run: |
           # Get list of changed files
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            # For PRs, compare against base branch
             git diff --name-only origin/${{ github.base_ref }}...HEAD > changed_files.txt
           else
-            # For pushes, compare last 2 commits
-            git diff --name-only HEAD~1 HEAD > changed_files.txt
+            git diff --name-only HEAD~1 HEAD > changed_files.txt 2>/dev/null || echo "" > changed_files.txt
           fi
           
           # Initialize all to false
-          RUST_CHANGED=false
           PYTHON_CHANGED=false
           TYPESCRIPT_CHANGED=false
+          CORPUS_CHANGED=false
           
-          # Check for Rust source changes (affects all components)
-          if grep -qE '^(joy-generator/|bindings/.*/src/|Cargo\.toml|Cargo\.lock)' changed_files.txt; then
-            RUST_CHANGED=true
-            echo "✅ Rust source changes detected - will test all components"
-          fi
-          
-          # Check for Python-specific changes (non-source files)
-          if grep -qE '^bindings/python/' changed_files.txt && ! grep -qE '^bindings/python/src/' changed_files.txt; then
+          # Check for corpus changes (affects both packages)
+          if grep -qE '^(corpus/|scripts/generate-corpus\.ts)' changed_files.txt; then
+            CORPUS_CHANGED=true
             PYTHON_CHANGED=true
-            echo "✅ Python-only changes detected"
-          fi
-          
-          # Check for TypeScript-specific changes (non-source files)
-          if grep -qE '^bindings/typescript/' changed_files.txt && ! grep -qE '^bindings/typescript/src/' changed_files.txt; then
             TYPESCRIPT_CHANGED=true
-            echo "✅ TypeScript-only changes detected"
+            echo "✅ Corpus or generator changes detected - will test all components"
           fi
           
-          # If Rust changed, test everything
-          if [ "$RUST_CHANGED" = "true" ]; then
-            echo "rust=true" >> $GITHUB_OUTPUT
-            echo "python=true" >> $GITHUB_OUTPUT
-            echo "typescript=true" >> $GITHUB_OUTPUT
-          else
-            # Otherwise, only test what changed
-            echo "rust=$RUST_CHANGED" >> $GITHUB_OUTPUT
-            echo "python=$PYTHON_CHANGED" >> $GITHUB_OUTPUT
-            echo "typescript=$TYPESCRIPT_CHANGED" >> $GITHUB_OUTPUT
+          # Check for Python-specific changes
+          if grep -qE '^packages/python/' changed_files.txt; then
+            PYTHON_CHANGED=true
+            echo "✅ Python changes detected"
           fi
+          
+          # Check for TypeScript-specific changes
+          if grep -qE '^packages/typescript/' changed_files.txt; then
+            TYPESCRIPT_CHANGED=true
+            echo "✅ TypeScript changes detected"
+          fi
+          
+          echo "python=$PYTHON_CHANGED" >> $GITHUB_OUTPUT
+          echo "typescript=$TYPESCRIPT_CHANGED" >> $GITHUB_OUTPUT
+          echo "corpus=$CORPUS_CHANGED" >> $GITHUB_OUTPUT
           
           echo "Changed files:"
           cat changed_files.txt || true
 
-  test:
-    name: Test
+  test-typescript:
+    name: Test TypeScript
     runs-on: ubuntu-latest
     needs: detect-changes
-    strategy:
-      fail-fast: true
-      matrix:
-        component: [rust, python, typescript]
-        include:
-          - component: rust
-            should-run: ${{ needs.detect-changes.outputs.rust }}
-          - component: python
-            should-run: ${{ needs.detect-changes.outputs.python }}
-          - component: typescript
-            should-run: ${{ needs.detect-changes.outputs.typescript }}
+    if: needs.detect-changes.outputs.typescript == 'true'
     
     steps:
       - uses: actions/checkout@v4
       
-      - name: Skip if no changes
-        if: matrix.should-run != 'true'
-        run: |
-          echo "⏭️ Skipping ${{ matrix.component }} tests - no relevant changes detected"
-          exit 0
-      
-      - name: Install Rust
-        if: matrix.should-run == 'true'
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
-      
-      - name: Cache Rust dependencies
-        if: matrix.should-run == 'true'
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
-      
-      - name: Install WASM target
-        if: matrix.component == 'typescript' && matrix.should-run == 'true'
-        run: |
-          source ~/.cargo/env || true
-          rustup target add wasm32-unknown-unknown
-      
-      - name: Cache wasm-bindgen-cli
-        if: matrix.component == 'typescript' && matrix.should-run == 'true'
-        uses: actions/cache@v4
-        with:
-          path: ~/.cargo/bin/wasm-bindgen
-          key: ${{ runner.os }}-wasm-bindgen-cli-0.2.106-v1
-          restore-keys: |
-            ${{ runner.os }}-wasm-bindgen-cli-
-      
-      - name: Install wasm-bindgen-cli
-        if: matrix.component == 'typescript' && matrix.should-run == 'true'
-        run: |
-          source ~/.cargo/env || true
-          if ! command -v wasm-bindgen >/dev/null 2>&1; then
-            echo "📥 Installing wasm-bindgen-cli..."
-            cargo install wasm-bindgen-cli --version 0.2.106 --quiet
-          else
-            echo "✅ wasm-bindgen-cli already installed (from cache)"
-          fi
-      
-      - name: Install build tools
-        if: matrix.should-run == 'true'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential clang
-      
-      - name: Test Rust
-        if: matrix.component == 'rust' && matrix.should-run == 'true'
-        run: |
-          source ~/.cargo/env || true
-          cargo test --all-features
-          cargo fmt --check --all
-          cargo clippy --all-targets --all-features -- -D warnings
-      
-      - name: Setup Python
-        if: matrix.component == 'python' && matrix.should-run == 'true'
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      
-      - name: Cache uv
-        if: matrix.component == 'python' && matrix.should-run == 'true'
-        uses: actions/cache@v4
-        with:
-          path: ~/.cargo/bin/uv
-          key: ${{ runner.os }}-uv-latest
-          restore-keys: |
-            ${{ runner.os }}-uv-
-      
-      - name: Install uv
-        if: matrix.component == 'python' && matrix.should-run == 'true'
-        run: |
-          if ! command -v uv >/dev/null 2>&1; then
-            curl -LsSf https://astral.sh/uv/install.sh | sh
-          else
-            echo "✅ uv already installed (from cache)"
-          fi
-      
-      - name: Copy README for Python tests
-        if: matrix.component == 'python' && matrix.should-run == 'true'
-        run: |
-          cp README.md bindings/python/README.md
-      
-      - name: Test Python
-        if: matrix.component == 'python' && matrix.should-run == 'true'
-        run: |
-          cd bindings/python
-          source ~/.cargo/env || true
-          uv venv --python 3.13
-          source .venv/bin/activate
-          uv pip install maturin pytest pytest-asyncio
-          # Build and install the package in editable mode
-          # The python-source = "." in pyproject.toml should include the joyous_departures/ directory
-          maturin develop
-          # Verify installation - check both extension module and Python package
-          python -c "import joyous_departures._joy_generator; print('✅ Rust extension module found')"
-          python -c "import joyous_departures; print('✅ Python package importable')" || (echo "❌ Package not importable. Debugging..."; pip list | grep joyous; pip show joyous-departures; find .venv/lib/python3.13/site-packages/ -name "*joyous*" 2>/dev/null || echo "No joyous files in site-packages"; python -c "import sys; print('Python path:', sys.path)"; exit 1)
-          # Run tests - add current directory to PYTHONPATH to ensure package is found
-          PYTHONPATH=. pytest tests/ -v
-      
       - name: Setup Node.js
-        if: matrix.component == 'typescript' && matrix.should-run == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
       
       - name: Setup pnpm
-        if: matrix.component == 'typescript' && matrix.should-run == 'true'
         uses: pnpm/action-setup@v4
         with:
           version: 9
           run_install: false
       
       - name: Cache pnpm dependencies
-        if: matrix.component == 'typescript' && matrix.should-run == 'true'
         uses: actions/cache@v4
         with:
-          path: bindings/typescript/node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('bindings/typescript/pnpm-lock.yaml') }}
+          path: packages/typescript/node_modules
+          key: ${{ runner.os }}-pnpm-ts-${{ hashFiles('packages/typescript/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-
+            ${{ runner.os }}-pnpm-ts-
       
-      - name: Test TypeScript
-        if: matrix.component == 'typescript' && matrix.should-run == 'true'
+      - name: Install dependencies
         run: |
-          cd bindings/typescript
-          source ~/.cargo/env || true
-          # Install dependencies first (tsdown is needed by build script)
+          cd packages/typescript
           pnpm install
-          # Use the build script which creates Cloudflare Workers-compatible wrapper
-          bash scripts/build-package.sh
+      
+      - name: Type check
+        run: |
+          cd packages/typescript
+          pnpm typecheck
+      
+      - name: Run tests
+        run: |
+          cd packages/typescript
           pnpm test
+      
+      - name: Build package
+        run: |
+          cd packages/typescript
+          pnpm build
+
+  test-python:
+    name: Test Python
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.python == 'true'
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      
+      - name: Install dependencies and run tests
+        run: |
+          cd packages/python
+          uv venv --python 3.13
+          source .venv/bin/activate
+          uv pip install -e ".[dev]"
+          pytest tests/ -v
+      
+      - name: Build package
+        run: |
+          cd packages/python
+          source .venv/bin/activate
+          uv pip install build
+          python -m build
 
   build:
     name: Build Packages
     runs-on: ubuntu-latest
-    needs: test
-    if: success()  # Only run if all tests pass
+    needs: [test-typescript, test-python]
+    if: always() && (needs.test-typescript.result == 'success' || needs.test-typescript.result == 'skipped') && (needs.test-python.result == 'success' || needs.test-python.result == 'skipped')
     
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-      
-      - name: Cache Rust dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
-      
-      - name: Install WASM target
-        run: |
-          source ~/.cargo/env || true
-          rustup target add wasm32-unknown-unknown
-      
-      - name: Cache wasm-bindgen-cli
-        uses: actions/cache@v4
-        with:
-          path: ~/.cargo/bin/wasm-bindgen
-          key: ${{ runner.os }}-wasm-bindgen-cli-0.2.106-v1
-          restore-keys: |
-            ${{ runner.os }}-wasm-bindgen-cli-
-      
-      - name: Install wasm-bindgen-cli
-        run: |
-          source ~/.cargo/env || true
-          if ! command -v wasm-bindgen >/dev/null 2>&1; then
-            echo "📥 Installing wasm-bindgen-cli..."
-            cargo install wasm-bindgen-cli --version 0.2.106 --quiet
-          else
-            echo "✅ wasm-bindgen-cli already installed (from cache)"
-          fi
-      
-      - name: Install build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential clang
-      
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      
-      - name: Cache uv
-        uses: actions/cache@v4
-        with:
-          path: ~/.cargo/bin/uv
-          key: ${{ runner.os }}-uv-latest
-          restore-keys: |
-            ${{ runner.os }}-uv-
-      
-      - name: Install uv
-        run: |
-          if ! command -v uv >/dev/null 2>&1; then
-            curl -LsSf https://astral.sh/uv/install.sh | sh
-          else
-            echo "✅ uv already installed (from cache)"
-          fi
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -318,67 +161,42 @@ jobs:
           version: 9
           run_install: false
       
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          path: bindings/typescript/node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('bindings/typescript/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
+          python-version: '3.13'
+      
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      
+      - name: Build TypeScript package
+        run: |
+          cd packages/typescript
+          pnpm install
+          pnpm build
+          npm pack
       
       - name: Build Python package
         run: |
-          cd bindings/python
-          source ~/.cargo/env || true
+          cd packages/python
           uv venv --python 3.13
           source .venv/bin/activate
-          uv pip install maturin
-          # Copy README to package directory so maturin can find it
-          cp ../../README.md README.md
-          maturin build --release
-          # Maturin builds to target/wheels/ relative to workspace root
-          # List the built wheel for verification
-          ls -lh ../../target/wheels/*.whl || echo "⚠️ No wheel found in ../../target/wheels/"
-          ls -lh target/wheels/*.whl || echo "⚠️ No wheel found in target/wheels/"
+          uv pip install build
+          python -m build
       
-      - name: Build TypeScript/WASM package
+      - name: List artifacts
         run: |
-          cd bindings/typescript
-          source ~/.cargo/env || true
-          # Install dependencies first (tsdown is needed by build script)
-          pnpm install
-          # Use the build script which creates Cloudflare Workers-compatible wrapper
-          bash scripts/build-package.sh
-          # Copy README from repo root to package directory for npm
-          cp ../../README.md README.md
-          pnpm build || true
-          # Create tarball for npm publish
-          cd pkg
-          npm pack
-          cd ..
-      
-      - name: List artifacts before upload
-        run: |
-          echo "Checking for Python wheels:"
-          find . -name "*.whl" -type f 2>/dev/null || echo "No .whl files found"
+          echo "TypeScript packages:"
+          find packages/typescript -name "*.tgz" -type f 2>/dev/null || echo "No .tgz files found"
           echo ""
-          echo "Checking for TypeScript tarballs:"
-          find . -name "*.tgz" -type f 2>/dev/null || echo "No .tgz files found"
-          echo ""
-          echo "Target directory structure:"
-          ls -la target/wheels/ 2>/dev/null || echo "target/wheels/ does not exist"
-          echo ""
-          echo "bindings/python/target directory structure:"
-          ls -la bindings/python/target/wheels/ 2>/dev/null || echo "bindings/python/target/wheels/ does not exist"
+          echo "Python packages:"
+          find packages/python/dist -name "*.whl" -o -name "*.tar.gz" 2>/dev/null || echo "No Python packages found"
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: packages
           path: |
-            target/wheels/*.whl
-            bindings/python/target/wheels/*.whl
-            bindings/typescript/pkg/*.tgz
+            packages/typescript/*.tgz
+            packages/python/dist/*
           if-no-files-found: warn
-
-
