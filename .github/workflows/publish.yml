@@ -7,12 +7,10 @@ on:
       - completed
     branches:
       - main
-  # Only trigger if Release workflow succeeded (not skipped/failed)
-  # This prevents publish from running when release was skipped
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to publish (e.g., 1.0.0)'
+        description: 'Version to publish (e.g., 2.0.0)'
         required: true
         type: string
 
@@ -20,7 +18,6 @@ jobs:
   check-existing:
     name: Check if packages already exist
     runs-on: ubuntu-latest
-    # Only run if Release workflow succeeded (not skipped/failed)
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -36,11 +33,8 @@ jobs:
         id: version
         run: |
           if [ "${{ github.event.inputs.version }}" != "" ]; then
-            # Manual trigger with version input
             VERSION="${{ github.event.inputs.version }}"
           else
-            # Extract version from release workflow
-            # Get the latest tag created by semantic-release
             git fetch --tags
             VERSION=$(git describe --tags --abbrev=0 | sed 's/^v//')
           fi
@@ -50,42 +44,32 @@ jobs:
       - name: Check if packages already exist
         id: check
         run: |
-          set -e  # Exit on error (but continue-on-error will still allow job to continue)
+          set -e
           VERSION="${{ steps.version.outputs.version }}"
           echo "🔍 Checking packages for version: $VERSION"
           
-          # Initialize outputs
           NPM_EXISTS="false"
           PYPI_EXISTS="false"
           
-          # Check npm
           echo "📦 Checking npm package..."
           if npm view @siviter-xyz/joyous-departures@$VERSION version >/dev/null 2>&1; then
-            echo "npm-exists=true" >> $GITHUB_OUTPUT
             NPM_EXISTS="true"
             echo "✅ npm package v$VERSION already exists"
           else
-            echo "npm-exists=false" >> $GITHUB_OUTPUT
             echo "❌ npm package v$VERSION does not exist"
           fi
+          echo "npm-exists=$NPM_EXISTS" >> $GITHUB_OUTPUT
           
-          # Check PyPI
           echo "🐍 Checking PyPI package..."
           HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://pypi.org/pypi/joyous-departures/$VERSION/json" || echo "000")
           if [ "$HTTP_CODE" == "200" ]; then
-            echo "pypi-exists=true" >> $GITHUB_OUTPUT
             PYPI_EXISTS="true"
             echo "✅ PyPI package v$VERSION already exists"
-          elif [ "$HTTP_CODE" == "404" ]; then
-            echo "pypi-exists=false" >> $GITHUB_OUTPUT
-            echo "❌ PyPI package v$VERSION does not exist (404 - will publish)"
           else
-            echo "pypi-exists=false" >> $GITHUB_OUTPUT
-            echo "⚠️ PyPI check returned HTTP $HTTP_CODE (assuming doesn't exist, will attempt publish)"
+            echo "❌ PyPI package v$VERSION does not exist"
           fi
+          echo "pypi-exists=$PYPI_EXISTS" >> $GITHUB_OUTPUT
           
-          # Determine if we should publish
-          # Use shell variables set during checks (GitHub Actions template syntax doesn't work in shell conditionals)
           if [ "$NPM_EXISTS" == "true" ] && [ "$PYPI_EXISTS" == "true" ]; then
             echo "should-publish=false" >> $GITHUB_OUTPUT
             echo "⚠️ Both packages already exist - skipping publish"
@@ -93,15 +77,6 @@ jobs:
             echo "should-publish=true" >> $GITHUB_OUTPUT
             echo "✅ Packages missing - will publish"
           fi
-          
-          # Debug: Show all outputs
-          echo ""
-          echo "📊 Check results summary:"
-          echo "  NPM_EXISTS: $NPM_EXISTS"
-          echo "  PYPI_EXISTS: $PYPI_EXISTS"
-          echo "  should-publish: $(grep '^should-publish=' $GITHUB_OUTPUT | cut -d'=' -f2)"
-          echo "  npm-exists output: $(grep '^npm-exists=' $GITHUB_OUTPUT | cut -d'=' -f2)"
-          echo "  pypi-exists output: $(grep '^pypi-exists=' $GITHUB_OUTPUT | cut -d'=' -f2)"
         continue-on-error: true
 
   publish-npm:
@@ -110,56 +85,12 @@ jobs:
     needs: check-existing
     if: needs.check-existing.outputs.should-publish == 'true' && needs.check-existing.outputs.npm-exists != 'true'
     permissions:
-      id-token: write  # Required for OIDC trusted publishing
+      id-token: write
       contents: read
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-      
-      - name: Cache Rust dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
-      
-      - name: Install WASM target
-        run: |
-          source ~/.cargo/env || true
-          rustup target add wasm32-unknown-unknown
-      
-      - name: Cache wasm-bindgen-cli
-        uses: actions/cache@v4
-        with:
-          path: ~/.cargo/bin/wasm-bindgen
-          key: ${{ runner.os }}-wasm-bindgen-cli-0.2.106-v1
-          restore-keys: |
-            ${{ runner.os }}-wasm-bindgen-cli-
-      
-      - name: Install wasm-bindgen-cli
-        run: |
-          source ~/.cargo/env || true
-          if ! command -v wasm-bindgen >/dev/null 2>&1; then
-            echo "📥 Installing wasm-bindgen-cli..."
-            cargo install wasm-bindgen-cli --version 0.2.106 --quiet
-          else
-            echo "✅ wasm-bindgen-cli already installed (from cache)"
-          fi
-      
-      - name: Install build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential clang
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -173,65 +104,32 @@ jobs:
           version: 9
           run_install: false
       
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v4
-        with:
-          path: bindings/typescript/node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('bindings/typescript/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-      
-      - name: Update npm to latest (required for trusted publishing)
+      - name: Update npm (required for trusted publishing)
         run: npm install -g npm@latest
       
-      - name: Use version from check job
-        id: version
+      - name: Update package.json version
         run: |
-          echo "version=${{ needs.check-existing.outputs.version }}" >> $GITHUB_OUTPUT
-          echo "Version: ${{ needs.check-existing.outputs.version }}"
-      
-      - name: Verify package.json version matches
-        run: |
-          cd bindings/typescript
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          cd packages/typescript
           EXPECTED_VERSION="${{ needs.check-existing.outputs.version }}"
-          if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ]; then
-            echo "⚠️ Version mismatch: package.json has $CURRENT_VERSION, expected $EXPECTED_VERSION"
-            echo "Updating to $EXPECTED_VERSION..."
-            pnpm version $EXPECTED_VERSION --no-git-tag-version
-          else
-            echo "✅ Version already correct: $CURRENT_VERSION"
-          fi
+          echo "Setting version to $EXPECTED_VERSION"
+          npm version $EXPECTED_VERSION --no-git-tag-version --allow-same-version
       
       - name: Install dependencies
         run: |
-          cd bindings/typescript
+          cd packages/typescript
           pnpm install
       
-      - name: Build WASM package
+      - name: Build package
         run: |
-          cd bindings/typescript
-          source ~/.cargo/env || true
-          # Use the build script which handles proper package building
-          bash scripts/build-package.sh
-          # Verify pkg directory exists and contains required files
-          echo "📦 Verifying pkg directory contents:"
-          ls -la pkg/ || echo "❌ pkg directory not found!"
-          echo "📦 pkg directory size:"
-          du -sh pkg/ || echo "❌ Cannot check pkg size"
+          cd packages/typescript
+          pnpm build
       
       - name: Publish to npm
         run: |
-          cd bindings/typescript
-          # Verify pkg exists before publishing
-          if [ ! -d "pkg" ]; then
-            echo "❌ ERROR: pkg directory missing! Cannot publish."
-            exit 1
-          fi
-          # Uses Trusted Publishing via OIDC (requires npm 11.5.1+)
-          # Trusted Publishing must be configured on npmjs.com before this will work
-          # See README.md for setup instructions
+          cd packages/typescript
           npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-pypi:
     name: Publish to PyPI
@@ -244,99 +142,34 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-      
-      - name: Cache Rust dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
-      
-      - name: Install build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential clang
-      
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
       
-      - name: Cache uv
-        uses: actions/cache@v4
-        with:
-          path: ~/.cargo/bin/uv
-          key: ${{ runner.os }}-uv-latest
-          restore-keys: |
-            ${{ runner.os }}-uv-
-      
       - name: Install uv
-        run: |
-          if ! command -v uv >/dev/null 2>&1; then
-            curl -LsSf https://astral.sh/uv/install.sh | sh
-          else
-            echo "✅ uv already installed (from cache)"
-          fi
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
       
-      - name: Use version from check job
-        id: version
+      - name: Update pyproject.toml version
         run: |
-          echo "version=${{ needs.check-existing.outputs.version }}" >> $GITHUB_OUTPUT
-          echo "Version: ${{ needs.check-existing.outputs.version }}"
-      
-      - name: Verify pyproject.toml version matches
-        run: |
-          cd bindings/python
-          CURRENT_VERSION=$(grep -E '^version = ' pyproject.toml | sed 's/version = "\(.*\)"/\1/')
+          cd packages/python
           EXPECTED_VERSION="${{ needs.check-existing.outputs.version }}"
-          if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ]; then
-            echo "⚠️ Version mismatch: pyproject.toml has $CURRENT_VERSION, expected $EXPECTED_VERSION"
-            echo "Updating to $EXPECTED_VERSION..."
-            sed -i "s/^version = \".*\"/version = \"$EXPECTED_VERSION\"/" pyproject.toml
-          else
-            echo "✅ Version already correct: $CURRENT_VERSION"
-          fi
+          echo "Setting version to $EXPECTED_VERSION"
+          sed -i "s/^version = \".*\"/version = \"$EXPECTED_VERSION\"/" pyproject.toml
       
       - name: Build Python package
         run: |
-          cd bindings/python
-          source ~/.cargo/env || true
-          # Use the build script which handles proper wheel packaging with RECORD file
-          bash scripts/build-wheel.sh
-      
-      - name: Install twine
-        run: |
-          cd bindings/python
-          source .venv/bin/activate || true
-          # Install twine for uploading to PyPI
-          uv pip install twine
+          cd packages/python
+          uv venv --python 3.13
+          source .venv/bin/activate
+          uv pip install build twine
+          python -m build
       
       - name: Publish to PyPI
         run: |
-          cd bindings/python
-          source .venv/bin/activate || true
-          # Maturin builds to workspace root target/wheels/, not bindings/python/target/wheels/
-          # Try both locations
-          if ls ../../target/wheels/*.whl 1> /dev/null 2>&1; then
-            twine upload ../../target/wheels/*.whl
-          elif ls target/wheels/*.whl 1> /dev/null 2>&1; then
-            twine upload target/wheels/*.whl
-          else
-            echo "❌ ERROR: No wheel files found!"
-            echo "Searched:"
-            echo "  - ../../target/wheels/*.whl"
-            echo "  - target/wheels/*.whl"
-            find . -name "*.whl" -type f 2>/dev/null || echo "No .whl files found anywhere"
-            exit 1
-          fi
+          cd packages/python
+          source .venv/bin/activate
+          twine upload dist/*
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}

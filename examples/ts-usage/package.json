@@ -15,6 +15,6 @@
     "vitest": "^2.0.0"
   },
   "dependencies": {
-    "@siviter-xyz/joyous-departures": "^1.6.4"
+    "@siviter-xyz/joyous-departures": "file:../../packages/typescript"
   }
 }
