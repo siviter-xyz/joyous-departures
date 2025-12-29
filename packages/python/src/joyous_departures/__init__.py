@@ -23,7 +23,7 @@ from zoneinfo import ZoneInfo
 
 from .corpus import CORPUS, CORPUS_SIZE
 
-__version__ = "2.0.0"
+__version__ = "0.0.0"
 __all__ = ["generate_goodbye", "generate_goodbye_sync", "CORPUS", "CORPUS_SIZE"]
 
 # Default values for template variables
