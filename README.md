@@ -13,10 +13,14 @@ Generate warm, heartfelt sign-off messages for email templates and other communi
 
 ## Overview
 
-A library that generates random, warm sign-off messages from a curated corpus of 90 unique phrases. Available as native implementations for both TypeScript (npm) and Python (PyPI) with zero external dependencies.
+A library that generates random, warm sign-off messages from a pre-curated corpus of template phrases. Available as native implementations for both TypeScript (npm) and Python (PyPI) with zero external dependencies.
 
-> **v2.0** - Now with pure native implementations! No more WASM, no native compilation required.
-> Works seamlessly in Cloudflare Workers, browsers, Node.js, and all Python environments.
+> **Over-engineered**? Most definitely.
+>
+> This project is an exploration of spec-first AI-assisted design and
+> an ode to a cherished partner and the aspects they inspire deeply within myself and in many others ❤️
+>
+> Most importantly, as ever, because it was fun!
 
 ## Features
 
@@ -25,7 +29,6 @@ A library that generates random, warm sign-off messages from a curated corpus of
 - 🎨 **Customizable**: Template variables (`{name}`, `{location}`, `{date}`, `{time}`)
 - 😊 **Emoji Support**: Emojis included by default, with option to strip
 - 📦 **Zero Dependencies**: Pure TypeScript and Python - no native modules
-- 🔄 **Backward Compatible**: v1.x API fully supported
 
 ## Template Variables
 
@@ -95,28 +98,13 @@ message = generate_goodbye_sync(template_args={"name": "Bob"}, strip_emojis=True
 print(message)  # "Wishing you a joyous day, Bob"
 ```
 
-### Cloudflare Workers
-
-```typescript
-import { generateGoodbyeSync } from '@siviter-xyz/joyous-departures';
-
-export default {
-  async fetch(request: Request): Promise<Response> {
-    const message = generateGoodbyeSync({ templateArgs: { name: 'World' } });
-    return new Response(message);
-  }
-};
-```
-
 ## API Reference
 
 ### TypeScript
 
 ```typescript
-// Async function (v1.x compatible)
 function generateGoodbye(options?: GoodbyeOptions): Promise<string>;
 
-// Sync function (new in v2.0)
 function generateGoodbyeSync(options?: GoodbyeOptions): string;
 
 interface GoodbyeOptions {
@@ -136,7 +124,6 @@ interface GoodbyeOptions {
 ### Python
 
 ```python
-# Async function (v1.x compatible)
 async def generate_goodbye(
     template_args: dict[str, str] | None = None,
     use_emojis: bool = True,
@@ -145,7 +132,6 @@ async def generate_goodbye(
     translator: Callable[[str, str], Awaitable[str]] | None = None,
 ) -> str: ...
 
-# Sync function (new in v2.0)
 def generate_goodbye_sync(
     template_args: dict[str, str] | None = None,
     use_emojis: bool = True,
