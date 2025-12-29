@@ -1,3 +1,27 @@
+# [2.0.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.7.0...v2.0.0) (2025-12-29)
+
+
+* feat!: native TypeScript and Python implementation ([e098522](https://github.com/siviter-xyz/joyous-departures/commit/e098522c5adf5914177fd535166be533ed10d4c5))
+
+
+### chore
+
+* archive Rust/WASM implementation ([25f92ab](https://github.com/siviter-xyz/joyous-departures/commit/25f92abcdd50f5b654d82058461e7b28617e1e2b))
+
+
+### Features
+
+* **build:** add corpus code generator ([9c188f6](https://github.com/siviter-xyz/joyous-departures/commit/9c188f6e2b7f6398cd9c5382d69e4f50ad975ca7))
+* **python:** add native Python library v2.0 ([1306b1d](https://github.com/siviter-xyz/joyous-departures/commit/1306b1d7e33d11e20b74c16e36de33397abf8d72))
+* **typescript:** add native TypeScript library v2.0 ([ba0bdca](https://github.com/siviter-xyz/joyous-departures/commit/ba0bdcae0ee44f1336f4c5e53b3cc90b1486f60b))
+
+
+### BREAKING CHANGES
+
+* WASM dependencies removed. API remains backward compatible
+but import paths may differ. Rust core archived to _archive/ directory.
+* Rust/WASM implementation archived, replaced by native libs.
+
 # [1.7.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.6.4...v1.7.0) (2025-12-23)
 
 
