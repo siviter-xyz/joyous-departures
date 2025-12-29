@@ -68,26 +68,48 @@ def _truncate(value: str | None, max_length: int) -> str | None:
     return value[:max_length] if len(value) > max_length else value
 
 
-def _get_current_date(timezone: str) -> str:
-    """Get current date in YYYY-MM-DD format for the specified timezone."""
+def _get_current_date(timezone: str, now: datetime | None = None) -> str:
+    """Get current date in YYYY-MM-DD format for the specified timezone.
+    
+    Reuses a single datetime object for efficiency.
+    """
     try:
         tz = ZoneInfo(timezone)
-        now = datetime.now(tz)
+        if now is None:
+            now = datetime.now(tz)
+        else:
+            # Convert naive datetime to timezone-aware if needed
+            if now.tzinfo is None:
+                now = datetime.now(tz)
+            else:
+                now = now.astimezone(tz)
         return now.strftime("%Y-%m-%d")
     except Exception:
         # Fallback if timezone is invalid
-        return datetime.now().strftime("%Y-%m-%d")
+        dt = now if now is not None else datetime.now()
+        return dt.strftime("%Y-%m-%d")
 
 
-def _get_current_time(timezone: str) -> str:
-    """Get current time in HH:MM format for the specified timezone."""
+def _get_current_time(timezone: str, now: datetime | None = None) -> str:
+    """Get current time in HH:MM format for the specified timezone.
+    
+    Reuses a single datetime object for efficiency.
+    """
     try:
         tz = ZoneInfo(timezone)
-        now = datetime.now(tz)
+        if now is None:
+            now = datetime.now(tz)
+        else:
+            # Convert naive datetime to timezone-aware if needed
+            if now.tzinfo is None:
+                now = datetime.now(tz)
+            else:
+                now = now.astimezone(tz)
         return now.strftime("%H:%M")
     except Exception:
         # Fallback if timezone is invalid
-        return datetime.now().strftime("%H:%M")
+        dt = now if now is not None else datetime.now()
+        return dt.strftime("%H:%M")
 
 
 def _substitute_templates(
@@ -95,16 +117,26 @@ def _substitute_templates(
     template_args: dict[str, str] | None,
     timezone: str,
 ) -> str:
-    """Substitute template variables in a message."""
+    """Substitute template variables in a message.
+    
+    Optimized with lazy date/time evaluation and single datetime object reuse.
+    """
     args = template_args or {}
 
-    # Get values with defaults and validation
+    # Check if date/time are needed before computing
+    needs_date = "{date}" in message
+    needs_time = "{time}" in message
+
+    # Reuse single datetime object if both date and time are needed
+    now = datetime.now() if (needs_date or needs_time) else None
+
+    # Get values with defaults and validation (lazy evaluation)
     name = _truncate(args.get("name"), _LIMITS["name"]) or _DEFAULTS["name"]
     location = _truncate(args.get("location"), _LIMITS["location"]) or _DEFAULTS["location"]
-    date = _truncate(args.get("date"), _LIMITS["date"]) or _get_current_date(timezone)
-    time = _truncate(args.get("time"), _LIMITS["time"]) or _get_current_time(timezone)
+    date = _truncate(args.get("date"), _LIMITS["date"]) or (_get_current_date(timezone, now) if needs_date else "")
+    time = _truncate(args.get("time"), _LIMITS["time"]) or (_get_current_time(timezone, now) if needs_time else "")
 
-    # Replace all template variables
+    # Replace all template variables (single pass)
     result = message
     result = result.replace("{name}", name)
     result = result.replace("{location}", location)

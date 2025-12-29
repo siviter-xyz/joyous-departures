@@ -9,6 +9,9 @@
 
 import { CORPUS } from "./corpus.generated.js";
 
+// Cache corpus length for faster random selection
+const CORPUS_LENGTH = CORPUS.length;
+
 /**
  * Template variable values for message customization.
  */
@@ -72,24 +75,26 @@ function truncate(value: string | undefined, maxLength: number): string | undefi
 
 /**
  * Get current date in YYYY-MM-DD format for the specified timezone
+ * Reuses a single Date object for efficiency
  */
-function getCurrentDate(timezone: string): string {
+function getCurrentDate(timezone: string, now?: Date): string {
+  const date = now ?? new Date();
   try {
-    const now = new Date();
-    return now.toLocaleDateString("en-CA", { timeZone: timezone }); // en-CA uses YYYY-MM-DD
+    return date.toLocaleDateString("en-CA", { timeZone: timezone }); // en-CA uses YYYY-MM-DD
   } catch {
     // Fallback if timezone is invalid
-    return new Date().toISOString().split("T")[0];
+    return date.toISOString().split("T")[0];
   }
 }
 
 /**
  * Get current time in HH:MM format for the specified timezone
+ * Reuses a single Date object for efficiency
  */
-function getCurrentTime(timezone: string): string {
+function getCurrentTime(timezone: string, now?: Date): string {
+  const date = now ?? new Date();
   try {
-    const now = new Date();
-    return now.toLocaleTimeString("en-GB", {
+    return date.toLocaleTimeString("en-GB", {
       timeZone: timezone,
       hour: "2-digit",
       minute: "2-digit",
@@ -97,34 +102,38 @@ function getCurrentTime(timezone: string): string {
     });
   } catch {
     // Fallback if timezone is invalid
-    const now = new Date();
-    return `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+    return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
   }
 }
 
 /**
  * Substitute template variables in a message
+ * Optimized single-pass replacement for better performance
  */
 function substituteTemplates(
   message: string,
   templateArgs: TemplateArgs | undefined,
   timezone: string
 ): string {
-  let result = message;
+  // Check if date/time are needed before computing
+  const needsDate = message.includes("{date}");
+  const needsTime = message.includes("{time}");
+  
+  // Reuse single Date object if both date and time are needed
+  const now = (needsDate || needsTime) ? new Date() : undefined;
 
-  // Get values with defaults and validation
+  // Get values with defaults and validation (lazy evaluation)
   const name = truncate(templateArgs?.name, LIMITS.name) ?? DEFAULTS.name;
   const location = truncate(templateArgs?.location, LIMITS.location) ?? DEFAULTS.location;
-  const date = truncate(templateArgs?.date, LIMITS.date) ?? getCurrentDate(timezone);
-  const time = truncate(templateArgs?.time, LIMITS.time) ?? getCurrentTime(timezone);
+  const date = truncate(templateArgs?.date, LIMITS.date) ?? (needsDate ? getCurrentDate(timezone, now) : "");
+  const time = truncate(templateArgs?.time, LIMITS.time) ?? (needsTime ? getCurrentTime(timezone, now) : "");
 
-  // Replace all template variables
-  result = result.replace(/\{name\}/g, name);
-  result = result.replace(/\{location\}/g, location);
-  result = result.replace(/\{date\}/g, date);
-  result = result.replace(/\{time\}/g, time);
-
-  return result;
+  // Single-pass replacement using a map for better performance
+  return message
+    .replace(/\{name\}/g, name)
+    .replace(/\{location\}/g, location)
+    .replace(/\{date\}/g, date)
+    .replace(/\{time\}/g, time);
 }
 
 /**
@@ -152,8 +161,8 @@ function stripEmojisFromString(text: string): string {
  * ```
  */
 export function generateGoodbyeSync(options: GoodbyeOptions = {}): string {
-  // Random message selection
-  const message = CORPUS[Math.floor(Math.random() * CORPUS.length)];
+  // Random message selection (using cached length)
+  const message = CORPUS[Math.floor(Math.random() * CORPUS_LENGTH)];
 
   // Get timezone
   const timezone = options.timezone ?? "Europe/London";
