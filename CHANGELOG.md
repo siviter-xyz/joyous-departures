@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/siviter-xyz/joyous-departures/compare/v2.0.0...v2.0.1) (2025-12-29)
+
+
+### Performance Improvements
+
+* optimize template substitution and date/time handling ([db0f5a6](https://github.com/siviter-xyz/joyous-departures/commit/db0f5a68f8f1bce93a12ffd60367a3ec6aab52d9))
+
 # [2.0.0](https://github.com/siviter-xyz/joyous-departures/compare/v1.7.0...v2.0.0) (2025-12-29)
 
 
