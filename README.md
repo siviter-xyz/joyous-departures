@@ -199,10 +199,9 @@ joyous-departures/
 │   └── en-GB.txt            # Source message corpus
 ├── scripts/
 │   └── generate-corpus.ts   # Corpus code generator
-├── examples/
-│   ├── ts-usage/            # TypeScript example
-│   └── py-usage/            # Python example
-└── _archive/                # Archived v1.x Rust/WASM code
+└── examples/
+    ├── ts-usage/            # TypeScript example
+    └── py-usage/            # Python example
 ```
 
 ### Scripts
